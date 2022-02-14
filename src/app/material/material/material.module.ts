@@ -9,6 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [],
@@ -23,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatTabsModule,
     MatCheckboxModule,
     MatIconModule,
+    MatSlideToggleModule,
   ],
   exports: [
     MatFormFieldModule,
@@ -34,6 +36,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatTabsModule,
     MatCheckboxModule,
     MatIconModule,
+    MatSlideToggleModule,
   ],
 })
 export class MaterialModule {}

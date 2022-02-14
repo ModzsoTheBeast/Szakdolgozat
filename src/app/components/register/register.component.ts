@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-register',
@@ -12,7 +13,11 @@ export class RegisterComponent implements OnInit {
   userForm: FormGroup;
   asd = false;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private userService: UserService
+  ) {
     this.userForm = this.fb.group({
       username: ['', [Validators.required]],
       fullname: ['', [Validators.required]],
@@ -41,6 +46,14 @@ export class RegisterComponent implements OnInit {
 
   onSubmit(): void {
     this.router.navigate(['login']);
+    this.userService
+      .createUser({
+        user_name: this.username?.value,
+        password: this.password?.value,
+        email: this.email?.value,
+        full_name: this.fullname?.value,
+      })
+      .subscribe((err) => console.log(err));
   }
 
   getUsernameMessage() {
@@ -56,7 +69,6 @@ export class RegisterComponent implements OnInit {
     if (this.email?.hasError('required')) {
       return 'You must enter a value';
     }
-
     return this.email?.hasError('email') ? 'Not a valid email' : '';
   }
   getFullnameMessage() {
