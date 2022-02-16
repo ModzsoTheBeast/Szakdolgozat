@@ -1,2 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 @import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
+*,
+** {
+  font-family: sans-serif;
+  font-weight: 500;
+  box-sizing: border-box;
+}

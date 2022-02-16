@@ -11,18 +11,8 @@
         mat-button
         (click)="move()"
         color="primary"
-        *ngIf="IsLogin"
       >
-        Bejelnetkezés
-      </button>
-      <button
-        style="min-width: 120px; justify-content: right; margin-left: 0.5rem"
-        mat-button
-        (click)="move()"
-        color="primary"
-        *ngIf="!IsLogin"
-      >
-        Regisztráció
+        {{ BtnTxt }}
       </button>
     </div>
   </mat-toolbar>

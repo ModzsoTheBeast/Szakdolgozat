@@ -1,20 +1,28 @@
 .footer {
   display: flex;
   align-items: center;
-  height: 100%;
+  height: 2rem;
+  width: 100%;
   vertical-align: bottom;
-  background-color: aquamarine;
+  background-color: #f5f5f5;
+  position: absolute;
+  margin: 0;
+  bottom: 0;
+  left: 0;
+  margin: 5px;
 }
 .madeBy,
 .date {
+  padding: 10px;
   font-size: small;
   color: grey;
-  margin: 0;
-  padding: 0;
+  position: relative;
 }
 
 .madeBy {
   margin-right: 10px;
+  font-size: smaller;
 }
 .date {
+  font-size: smaller;
 }
