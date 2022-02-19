@@ -3,13 +3,17 @@
   margin: 0;
   padding: 0;
 }
+.card {
+  height: 40vh;
+}
 .uwu {
   display: flex;
   justify-content: center;
+  align-self: center;
 }
 h1 {
   text-align: center;
-  color: purple;
+  color: #d9b08c;
 }
 form {
   width: 80vw;

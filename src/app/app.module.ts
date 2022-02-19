@@ -12,6 +12,7 @@ import { ProjectsComponent } from './components/projects/projects.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HttpClientModule } from '@angular/common/http';
+import { LandingPageComponent } from './components/landing-page/landing-page.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { HttpClientModule } from '@angular/common/http';
     ProjectsComponent,
     HeaderComponent,
     FooterComponent,
+    LandingPageComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,31 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ThemeService } from 'src/app/services/theme-service/theme-service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit {
-  IsLogin: boolean;
+export class HeaderComponent {
+  IsLogin: boolean = true;
   isDarkMode: boolean;
   BtnTxt: string;
-  constructor(private router: Router) {}
-
-  ngOnInit(): void {
-    this.IsLogin = true;
-    this.isDarkMode = false;
-    this.BtnTxt = 'Regisztráció!';
+  constructor(private router: Router, private themeService: ThemeService) {
+    this.themeService.initTheme();
+    this.isDarkMode = this.themeService.isDarkMode();
   }
 
   move() {
     this.IsLogin = !this.IsLogin;
-    if (this.IsLogin) {
-      this.BtnTxt = 'Regisztráció';
-      this.router.navigate(['register']);
-    } else {
-      this.BtnTxt = 'Bejelentkezés';
-      this.router.navigate(['login']);
-    }
+  }
+
+  toggleDarkMode() {
+    this.isDarkMode = this.themeService.isDarkMode();
+
+    this.isDarkMode
+      ? this.themeService.update('light-mode')
+      : this.themeService.update('dark-mode');
   }
 }

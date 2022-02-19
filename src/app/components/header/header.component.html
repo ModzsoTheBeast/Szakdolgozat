@@ -1,19 +1,23 @@
 <div class="header">
-  <mat-toolbar>
-    <span style="color: Purple; font-size: 30px">DevOops</span>
+  <mat-toolbar color="primary">
+    <span style="color: #d9b08c; font-size: 30px">DevOops</span>
     <div class="right">
       <mat-slide-toggle
-        color="primary"
-        [checked]="isDarkMode"
+        color="accent"
+        (click)="toggleDarkMode()"
+        [(ngModel)]="isDarkMode"
       ></mat-slide-toggle>
       <button
         style="min-width: 120px; justify-content: right; margin-left: 0.5rem"
-        mat-button
+        mat-raised-button
         (click)="move()"
-        color="primary"
+        color="accent"
       >
-        {{ BtnTxt }}
+        {{ IsLogin ? "Regisztráció" : "Bejelentkezés" }}
       </button>
     </div>
   </mat-toolbar>
 </div>
+<app-login *ngIf="IsLogin"></app-login>
+<app-register *ngIf="!IsLogin"></app-register>
+<app-footer></app-footer>
