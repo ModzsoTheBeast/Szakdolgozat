@@ -34,11 +34,11 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
-import { OverlayModule } from '@angular/cdk/overlay';
-
+import { DragDropModule } from '@angular/cdk/drag-drop';
 @NgModule({
   declarations: [],
   imports: [
+    DragDropModule,
     CommonModule,
     MatAutocompleteModule,
     MatBadgeModule,
@@ -77,6 +77,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     MatTreeModule,
   ],
   exports: [
+    DragDropModule,
     MatAutocompleteModule,
     MatBadgeModule,
     MatBottomSheetModule,

@@ -1,7 +1,18 @@
 <div class="header">
   <mat-toolbar color="primary">
-    <span style="color: #d9b08c; font-size: 30px">DevOops</span>
-    <div class="right">
+    <span *ngIf="!isDarkMode" style="color: rgb(7, 71, 47); font-size: 30px"
+      >DevOops</span
+    >
+    <span *ngIf="isDarkMode" style="color: #d9b08c; font-size: 30px"
+      >DevOops</span
+    >
+    <div class="right" *ngIf="!isLoggedIn">
+      <mat-icon *ngIf="isDarkMode" style="margin-right: 1rem"
+        >brightness_3</mat-icon
+      >
+      <mat-icon *ngIf="!isDarkMode" style="margin-right: 1rem"
+        >wb_sunny</mat-icon
+      >
       <mat-slide-toggle
         color="accent"
         (click)="toggleDarkMode()"
@@ -16,8 +27,26 @@
         {{ IsLogin ? "Regisztráció" : "Bejelentkezés" }}
       </button>
     </div>
+    <div class="right" *ngIf="isLoggedIn">
+      <mat-icon *ngIf="isDarkMode" style="margin-right: 1rem"
+        >brightness_3</mat-icon
+      >
+      <mat-icon *ngIf="!isDarkMode" style="margin-right: 1rem"
+        >wb_sunny</mat-icon
+      >
+      <mat-slide-toggle
+        color="accent"
+        (click)="toggleDarkMode()"
+        [(ngModel)]="isDarkMode"
+      ></mat-slide-toggle>
+      <button
+        style="min-width: 120px; justify-content: right; margin-left: 0.5rem"
+        mat-raised-button
+        color="accent"
+        routerLink="/login"
+      >
+        Kijelentkezés
+      </button>
+    </div>
   </mat-toolbar>
 </div>
-<app-login *ngIf="IsLogin"></app-login>
-<app-register *ngIf="!IsLogin"></app-register>
-<app-footer></app-footer>

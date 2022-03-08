@@ -73,6 +73,18 @@
           [disabled]="userForm.invalid"
           type="submit"
         >
+          <span *ngIf="isLoading"
+            ><mat-spinner
+              color="accent"
+              [diameter]="20"
+              style="
+                float: left;
+                vertical-align: middle;
+                margin-right: 10%;
+                margin-top: 7%;
+              "
+            ></mat-spinner
+          ></span>
           Regisztráció
         </button>
       </div>

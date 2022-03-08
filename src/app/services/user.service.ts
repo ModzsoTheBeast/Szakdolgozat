@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { UserDTO } from '../DTOs/UserDTO';
+import { UserDTO, UserLoginDTO } from '../DTOs/UserDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +12,13 @@ export class UserService {
   createUser(user: UserDTO) {
     return this.http.post<UserDTO>(
       `${environment.apiUrl}/api/user/register`,
+      user
+    );
+  }
+
+  userLogin(user: UserLoginDTO) {
+    return this.http.post<UserLoginDTO>(
+      `${environment.apiUrl}/api/user/login`,
       user
     );
   }

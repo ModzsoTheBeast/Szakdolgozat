@@ -8,22 +8,25 @@ import { RegisterComponent } from './components/register/register.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ProjectsComponent } from './components/projects/projects.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LandingPageComponent } from './components/landing-page/landing-page.component';
-
+import { SidenavService } from './services/sidenav/sidenav.service';
+import { MainPageComponent } from './components/main-page/main-page/main-page.component';
+import { ChartsModule } from 'ng2-charts';
+import { ProjectCardComponent } from './components/project-card/project-card/project-card.component';
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
     NavigationComponent,
-    ProjectsComponent,
     HeaderComponent,
     FooterComponent,
     LandingPageComponent,
+    MainPageComponent,
+    ProjectCardComponent,
   ],
   imports: [
     BrowserModule,
@@ -33,8 +36,9 @@ import { LandingPageComponent } from './components/landing-page/landing-page.com
     ReactiveFormsModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    ChartsModule,
   ],
-  providers: [],
+  providers: [SidenavService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

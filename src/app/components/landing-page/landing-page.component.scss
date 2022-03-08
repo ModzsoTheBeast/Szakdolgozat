@@ -1,17 +1,6 @@
-*,
-** {
-  margin: 0;
+.addProjectBtn {
+  display: block;
+  margin-top: 2rem;
   padding: 0;
-}
-
-body {
-  box-sizing: border-box;
-}
-
-.content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 80vw;
-  height: auto;
+  text-align: center;
 }

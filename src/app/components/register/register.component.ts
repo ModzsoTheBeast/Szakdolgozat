@@ -1,5 +1,8 @@
+import { HttpErrorResponse } from '@angular/common/http';
+import { error } from '@angular/compiler/src/util';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 
@@ -12,11 +15,15 @@ export class RegisterComponent implements OnInit {
   hide = true;
   userForm: FormGroup;
   asd = false;
+  isLoading: boolean = false;
+  success: boolean;
+  durationInSeconds: number = 2;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private snackBar: MatSnackBar
   ) {
     this.userForm = this.fb.group({
       username: ['', [Validators.required]],
@@ -44,8 +51,8 @@ export class RegisterComponent implements OnInit {
     return this.userForm.get('fullname');
   }
 
-  onSubmit(): void {
-    this.router.navigate(['login']);
+  async onSubmit() {
+    this.isLoading = true;
     this.userService
       .createUser({
         user_name: this.username?.value,
@@ -53,7 +60,19 @@ export class RegisterComponent implements OnInit {
         email: this.email?.value,
         full_name: this.fullname?.value,
       })
-      .subscribe((err) => console.log(err));
+      .subscribe(
+        (next) => {
+          this.router.navigate(['login']);
+        },
+        (err: HttpErrorResponse) => {
+          console.log(err);
+          this.snackBar.open('Sikertelen bejelentkezés', '', {
+            duration: this.durationInSeconds * 1000,
+          });
+          this.isLoading = false;
+        },
+        () => (this.isLoading = false)
+      );
   }
 
   getUsernameMessage() {
