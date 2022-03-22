@@ -1,0 +1,24 @@
+<mat-toolbar>
+  <!-- <div style="width: 100%"></div> -->
+  <h1>Uj lista letrehozasa</h1>
+  <div style="width: 100%"></div>
+  <button mat-icon-button color="primary" mat-dialog-close style="float: right">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-toolbar>
+<mat-dialog-content style="text-align: center">
+  <mat-form-field
+    ngDefaultControl
+    style="width: 80%; padding-left: 16px; margin-right: 16px; overflow: hidden"
+  >
+    <mat-label>Nev</mat-label>
+    <input matInput [(ngModel)]="data.title" placeholder="Ex.: Todo" />
+    <!-- <mat-error *ngIf="listNameCtrl?.invalid && listNameCtrl?.touched">
+      Kotelezo
+    </mat-error> -->
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button (click)="submit()" color="primary">submit</button>
+  <button mat-button mat-dialog-close>close</button>
+</mat-dialog-actions>

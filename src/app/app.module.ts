@@ -16,6 +16,13 @@ import { SidenavService } from './services/sidenav/sidenav.service';
 import { MainPageComponent } from './components/main-page/main-page/main-page.component';
 import { ChartsModule } from 'ng2-charts';
 import { ProjectCardComponent } from './components/project-card/project-card/project-card.component';
+import { TaskSectionComponent } from './components/task-section/task-section/task-section.component';
+import { TaskComponent } from './components/task/task/task.component';
+import { TaskDialogComponent } from './components/dialogs/task-dialog/task-dialog/task-dialog.component';
+import { AddUserToProjectDialogComponent } from './components/dialogs/add-user-to-project-dialog/add-user-to-project-dialog/add-user-to-project-dialog.component';
+import { UserUpdateDialogComponent } from './components/dialogs/user-update-dialog/user-update-dialog/user-update-dialog.component';
+import { CreateListDialogComponent } from './components/dialogs/create-list-dialog/create-list-dialog/create-list-dialog.component';
+import { TestComponent } from './components/dialogs/test/test/test.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,6 +34,13 @@ import { ProjectCardComponent } from './components/project-card/project-card/pro
     LandingPageComponent,
     MainPageComponent,
     ProjectCardComponent,
+    TaskSectionComponent,
+    TaskComponent,
+    TaskDialogComponent,
+    AddUserToProjectDialogComponent,
+    UserUpdateDialogComponent,
+    CreateListDialogComponent,
+    TestComponent,
   ],
   imports: [
     BrowserModule,

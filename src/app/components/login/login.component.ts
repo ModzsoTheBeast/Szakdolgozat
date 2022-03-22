@@ -8,7 +8,9 @@ import {
 } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { UserService } from 'src/app/services/user.service';
+import { Subject } from 'rxjs';
+import { HeaderServiceService } from 'src/app/services/header-service/header-service.service';
+import { UserService } from 'src/app/services/user-service/user.service';
 import { HeaderComponent } from '../header/header.component';
 
 @Component({
@@ -23,18 +25,23 @@ export class LoginComponent implements OnInit {
   asd = false;
   durationInSeconds: number = 2;
   isLoading: boolean = false;
-
+  //header------
+  isLoggedIn: boolean = false;
+  isLoggedInSrc: Subject<boolean>;
+  //
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private header: HeaderComponent,
     private userService: UserService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private header: HeaderServiceService
   ) {
     this.userForm = this.fb.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(3)]],
     });
+    this.isLoggedInSrc = this.header.isLoggedInSource;
+    // const isLoggedIn = this.header.getLoggedIn;
   }
 
   ngOnInit(): void {}
@@ -56,8 +63,8 @@ export class LoginComponent implements OnInit {
       })
       .subscribe(
         (next) => {
+          this.header.changeIsLoggedIn((this.isLoggedIn = true));
           this.router.navigate(['projects']);
-          this.header.isLoggedIn = true;
         },
         (err: HttpErrorResponse) => {
           console.log(err);
@@ -68,8 +75,8 @@ export class LoginComponent implements OnInit {
         },
         () => (this.isLoading = false)
       );
-    this.header.isLoggedIn = true;
     this.router.navigate(['projects']); //ki kell majd ezt venni!
+    this.header.changeIsLoggedIn((this.isLoggedIn = true));
   }
 
   getUsernameMessage() {

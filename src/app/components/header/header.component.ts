@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { HeaderServiceService } from 'src/app/services/header-service/header-service.service';
 import { SidenavService } from 'src/app/services/sidenav/sidenav.service';
 import { ThemeService } from 'src/app/services/theme-service/theme-service';
 
@@ -13,15 +15,21 @@ export class HeaderComponent {
   isDarkMode: boolean;
   BtnTxt: string;
   isLoggedIn: Boolean = false;
+  isLoggedInSrc: Subject<boolean>;
 
   constructor(
     private router: Router,
     private themeService: ThemeService,
-    private sidenavService: SidenavService
+    private sidenavService: SidenavService,
+    private header: HeaderServiceService
   ) {
     this.router.navigate(['login']);
     this.themeService.initTheme();
     this.isDarkMode = this.themeService.isDarkMode();
+    this.isLoggedInSrc = this.header.isLoggedInSource;
+    this.isLoggedInSrc.subscribe((value) => {
+      this.isLoggedIn = value;
+    });
   }
 
   move() {
@@ -48,5 +56,9 @@ export class HeaderComponent {
       this.sidenavService._show();
       i = 1;
     }
+  }
+
+  logout() {
+    this.isLoggedIn = false;
   }
 }

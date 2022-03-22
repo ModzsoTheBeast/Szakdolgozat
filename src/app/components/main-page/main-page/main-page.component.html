@@ -1,31 +1,29 @@
-<div cdkDropListGroup>
-  <div class="example-container">
-    <h2>To do</h2>
-
-    <div
-      cdkDropList
-      [cdkDropListData]="todo"
-      class="example-list"
-      (cdkDropListDropped)="drop($event)"
-    >
-      <div class="example-box" *ngFor="let item of todo" cdkDrag>
-        {{ item }}
-      </div>
-    </div>
+<div
+  cdkDropListGroup
+  class="wrapper parent"
+  #elemt
+  (mousedown)="startDragging($event, false, elemt)"
+  (mouseup)="stopDragging($event, false)"
+  (mouseleave)="stopDragging($event, false)"
+  (mousemove)="moveEvent($event, elemt)"
+>
+  <div class="child" *ngFor="let listData of lists">
+    <app-task-section [title]="listData.title"></app-task-section>
   </div>
-
-  <div class="example-container">
-    <h2>Done</h2>
-
-    <div
-      cdkDropList
-      [cdkDropListData]="done"
-      class="example-list"
-      (cdkDropListDropped)="drop($event)"
-    >
-      <div class="example-box" *ngFor="let item of done" cdkDrag>
-        {{ item }}
-      </div>
+  <div *ngIf="numberOfLists != 0; then thenBlock; else elseBlock"></div>
+  <ng-template #thenBlock>
+    <div style="margin-top: 36px">
+      <button mat-fab color="primary" (click)="createListDialog()">
+        <mat-icon>add</mat-icon>
+      </button>
     </div>
-  </div>
+  </ng-template>
+  <ng-template #elseBlock>
+    <div class="position-absolute top-50 start-50 translate-middle">
+      <button mat-fab color="primary" (click)="createListDialog()">
+        <mat-icon>add</mat-icon>
+      </button>
+      <h1 style="text-align: center">Hozz létre egy listát!</h1>
+    </div>
+  </ng-template>
 </div>

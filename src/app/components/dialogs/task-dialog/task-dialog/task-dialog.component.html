@@ -1,0 +1,26 @@
+<form [formGroup]="taskForm" (click)="submit()">
+  <mat-toolbar>
+    <mat-form-field formControlName="taskNameCtrl">
+      <mat-label></mat-label>
+      <input matInput inputType="text" [value]="taskName" />
+      <mat-error *ngIf="taskNameCtrl?.invalid && taskNameCtrl?.touched">
+        Max 13 karakter hosszú számokból állhat!
+      </mat-error>
+    </mat-form-field>
+    <!-- <div style="width: 100%"></div> -->
+    <button
+      mat-icon-button
+      color="prymary"
+      mat-dialog-close
+      style="align-self: flex-end"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <mat-dialog-content> </mat-dialog-content>
+</form>
+<mat-dialog-actions align="end">
+  <button mat-raised-button type="submit" color="primary">submit</button>
+  <button mat-button mat-dialog-close>close</button>
+</mat-dialog-actions>

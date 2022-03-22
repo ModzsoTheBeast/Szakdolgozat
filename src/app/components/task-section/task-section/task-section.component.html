@@ -1,0 +1,16 @@
+<mat-card class="example-container">
+  <h2 style="text-transform: uppercase">{{ title }}</h2>
+  <div
+    cdkDropList
+    [cdkDropListData]="tasks"
+    class="example-list"
+    (cdkDropListDropped)="drop($event)"
+  >
+    <div *ngFor="let taskData of tasks">
+      <app-task
+        [taskName]="taskData.name"
+        [taskDesc]="taskData.desc"
+      ></app-task>
+    </div>
+  </div>
+</mat-card>

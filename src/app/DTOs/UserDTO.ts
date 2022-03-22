@@ -5,7 +5,7 @@ export class UserDTO {
   full_name: string;
 }
 
-export class UserLoginDTO {
+export interface UserLoginDTO {
   user_name: string;
   password: string;
 }
