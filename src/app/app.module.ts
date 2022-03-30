@@ -23,6 +23,7 @@ import { AddUserToProjectDialogComponent } from './components/dialogs/add-user-t
 import { UserUpdateDialogComponent } from './components/dialogs/user-update-dialog/user-update-dialog/user-update-dialog.component';
 import { CreateListDialogComponent } from './components/dialogs/create-list-dialog/create-list-dialog/create-list-dialog.component';
 import { TestComponent } from './components/dialogs/test/test/test.component';
+
 @NgModule({
   declarations: [
     AppComponent,

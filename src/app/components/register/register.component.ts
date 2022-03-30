@@ -27,7 +27,8 @@ export class RegisterComponent implements OnInit {
   ) {
     this.userForm = this.fb.group({
       username: ['', [Validators.required]],
-      fullname: ['', [Validators.required]],
+      firstname: ['', [Validators.required]],
+      lastname: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
     });
@@ -47,8 +48,12 @@ export class RegisterComponent implements OnInit {
     return this.userForm.get('email');
   }
 
-  get fullname() {
-    return this.userForm.get('fullname');
+  get firstname() {
+    return this.userForm.get('firstname');
+  }
+
+  get lastname() {
+    return this.userForm.get('lastname');
   }
 
   async onSubmit() {
@@ -58,7 +63,8 @@ export class RegisterComponent implements OnInit {
         user_name: this.username?.value,
         password: this.password?.value,
         email: this.email?.value,
-        full_name: this.fullname?.value,
+        firstname: this.firstname?.value,
+        lastname: this.lastname?.value,
       })
       .subscribe(
         (next) => {
@@ -66,7 +72,7 @@ export class RegisterComponent implements OnInit {
         },
         (err: HttpErrorResponse) => {
           console.log(err);
-          this.snackBar.open('Sikertelen bejelentkezés', '', {
+          this.snackBar.open('Sikertelen regisztráció', '', {
             duration: this.durationInSeconds * 1000,
           });
           this.isLoading = false;
@@ -90,7 +96,11 @@ export class RegisterComponent implements OnInit {
     }
     return this.email?.hasError('email') ? 'Not a valid email' : '';
   }
-  getFullnameMessage() {
-    return this.fullname?.hasError('required') ? 'Kötelező!' : '';
+  getFirstnameMessage() {
+    return this.firstname?.hasError('required') ? 'Kötelező!' : '';
+  }
+
+  getLastnameMessage() {
+    return this.lastname?.hasError('required') ? 'Kötelező!' : '';
   }
 }

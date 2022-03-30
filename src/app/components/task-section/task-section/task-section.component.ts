@@ -4,6 +4,7 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { Component, Input } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-task-section',
@@ -14,12 +15,32 @@ export class TaskSectionComponent {
   @Input()
   title: string;
 
+  createTaskForm: FormGroup;
   tasks: any[];
-  constructor() {
+  createTaskBool: boolean = false;
+  constructor(private formBuilder: FormBuilder) {
+    this.createListForm();
     this.tasks = [];
-    this.tasks.push({ name: 'name1', desc: 'desc1' });
-    this.tasks.push({ name: 'name2', desc: 'desc2' });
-    this.tasks.push({ name: 'name3', desc: 'desc3' });
+    //TODO:getTasksByListId();
+    this.tasks.push();
+  }
+
+  createTaskAction() {
+    this.tasks.push();
+  }
+
+  createTask() {
+    this.createTaskBool = true;
+  }
+
+  createListForm() {
+    this.createTaskForm = this.formBuilder.group({
+      taskNameCtrl: ['', Validators.required],
+    });
+  }
+
+  get taskNameCtrl() {
+    return this.createTaskForm.get('taskNameCtrl');
   }
 
   drop(event: CdkDragDrop<string[]>) {

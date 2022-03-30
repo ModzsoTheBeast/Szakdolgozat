@@ -8,7 +8,9 @@ import {
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subject } from 'rxjs';
 import { DialogData } from 'src/app/helpers/dialog';
+import { CreateListService } from 'src/app/services/create-list/create-list.service';
 import { ListServiceService } from 'src/app/services/list-service/list-service.service';
 
 @Component({
@@ -17,16 +19,16 @@ import { ListServiceService } from 'src/app/services/list-service/list-service.s
   styleUrls: ['./create-list-dialog.component.scss'],
 })
 export class CreateListDialogComponent implements OnInit {
-  taskName: string = 'paceholderName';
+  listName: string = '';
+  listNameSrc: Subject<string>;
   listForm: FormGroup;
-
+  isLoading: boolean = false;
   constructor(
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<CreateListDialogComponent>,
     private listService: ListServiceService,
     private snackBar: MatSnackBar,
-    @Inject(MAT_DIALOG_DATA)
-    public data: DialogData
+    public listValueService: CreateListService
   ) {
     this.createListForm();
   }
@@ -34,26 +36,37 @@ export class CreateListDialogComponent implements OnInit {
   ngOnInit(): void {}
 
   submit() {
-    console.log('asd ');
-    console.log(this.data);
-
+    if (
+      this.listNameCtrl?.value.trim() === undefined ||
+      this.listNameCtrl?.value.trim() === null
+    )
+      return;
+    this.isLoading = true;
     this.listService
       .createList({
-        listName: this.data.title.trim(),
+        listName: this.listNameCtrl?.value.trim(),
       })
       .subscribe(
         (next) => {
-          this.snackBar.open('sikerult letrehozni a listat', '', {
+          this.listValueService.myMethod(this.listNameCtrl?.value.trim());
+          this.snackBar.open('A lista létrehozása sikeres!', '', {
             duration: 2000,
           });
+          this.isLoading = false;
           this.dialogRef.close();
         },
         (err: HttpErrorResponse) => {
+          this.listValueService.myMethod(this.listNameCtrl?.value.trim());
           console.log(err);
-          this.snackBar.open('Nem sikerult letrehozni a listat', '', {
+          this.snackBar.open('Nem sikerült létrehozni a listát!', '', {
             duration: 2000,
           });
+          this.isLoading = false;
+          this.listForm.reset();
           this.dialogRef.close();
+        },
+        () => {
+          this.isLoading = false;
         }
       );
   }

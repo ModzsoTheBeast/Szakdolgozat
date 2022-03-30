@@ -19,7 +19,7 @@ export class TaskComponent implements OnInit {
   ngOnInit(): void {}
 
   panelOpenState: boolean = false;
-
+  contributors = [{ name: 'elso' }, { name: 'masodik' }];
   openTaskDialog() {
     const dialogConfig = new MatDialogConfig();
 

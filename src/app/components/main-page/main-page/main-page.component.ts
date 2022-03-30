@@ -5,6 +5,9 @@ import {
 } from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
+import { CreateListService } from 'src/app/services/create-list/create-list.service';
+import Swal from 'sweetalert2';
 import { CreateListDialogComponent } from '../../dialogs/create-list-dialog/create-list-dialog/create-list-dialog.component';
 
 @Component({
@@ -21,14 +24,24 @@ export class MainPageComponent {
   //variables for data
   lists: any[];
   title: string;
-  numberOfLists: number;
-  constructor(public dialog: MatDialog) {
+  listName: string = '';
+  listNameSrc: Subject<string>;
+  constructor(
+    public dialog: MatDialog,
+    private listService: CreateListService
+  ) {
     this.lists = [];
-    //getAllLists
-    this.numberOfLists = this.lists.length;
+    /*TODO: getAllLists().subscribe(res => {
+      this.lists = [{id: res.id, title: res.title}];
+    })*/
+    this.listService.myMethod$.subscribe((data) => {
+      this.title = data;
+      this.lists.push({ title: this.title });
+      //TODO: setList();
+    });
   }
 
-  createListDialog() {
+  async createListDialog() {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = true;
@@ -36,24 +49,16 @@ export class MainPageComponent {
     dialogConfig.hasBackdrop = true;
     dialogConfig.panelClass = ['task-dialog'];
     if (window.innerWidth < 768) {
-      dialogConfig.width = '80vw';
+      dialogConfig.width = 'auto';
       dialogConfig.height = 'auto';
     } else {
-      dialogConfig.width = '60vw';
+      dialogConfig.width = '40vw';
       dialogConfig.height = 'auto';
     }
     dialogConfig.data = {
       title: this.title,
     };
     const dialogRef = this.dialog.open(CreateListDialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-      console.log(result);
-      if (result != null || result != undefined || this.title != '') {
-        this.title = result;
-        this.lists.push({ title: this.title });
-      }
-    });
   }
 
   startDragging(

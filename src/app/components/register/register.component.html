@@ -1,19 +1,34 @@
 <div class="uwu">
   <mat-card class="card">
     <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-      <h1>Regisztráció</h1>
-      <mat-form-field appearance="outline" style="width: 100%">
-        <mat-label> Teljes név </mat-label>
+      <h1 style="margin-bottom: 1em">Regisztráció</h1>
+      <mat-form-field appearance="outline" style="width: 49%; float: left">
+        <mat-label> Keresztnév </mat-label>
         <input
           matInput
           type="text"
           required
           autocomplete="off"
-          formControlName="fullname"
+          formControlName="firstname"
           required
         />
-        <mat-error *ngIf="fullname?.invalid">{{
-          getFullnameMessage()
+        <mat-error *ngIf="firstname?.invalid">{{
+          getFirstnameMessage()
+        }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" style="width: 49%; float: right">
+        <mat-label> Vezetéknév </mat-label>
+        <input
+          matInput
+          type="text"
+          required
+          autocomplete="off"
+          formControlName="lastname"
+          required
+        />
+        <mat-error *ngIf="lastname?.invalid">{{
+          getLastnameMessage()
         }}</mat-error>
       </mat-form-field>
 
