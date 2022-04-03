@@ -2,6 +2,7 @@ import { commentDTO } from './CommentDTO';
 import { contributorsDTO } from './ContributorDTO';
 
 export interface taskDTO {
+  id?: number;
   name: string;
   desc: string;
   done: boolean;

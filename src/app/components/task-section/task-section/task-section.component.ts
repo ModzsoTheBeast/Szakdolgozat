@@ -3,30 +3,39 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { taskDTO } from '../../../DTOs/TaskDTO';
 @Component({
   selector: 'app-task-section',
   templateUrl: './task-section.component.html',
   styleUrls: ['./task-section.component.scss'],
 })
-export class TaskSectionComponent {
-  @Input()
-  title: string;
+export class TaskSectionComponent implements OnInit {
+  @Input() title: string;
+  @Input() _tasks: taskDTO[];
 
   createTaskForm: FormGroup;
   tasks: any[];
   createTaskBool: boolean = false;
   constructor(private formBuilder: FormBuilder) {
     this.createListForm();
-    this.tasks = [];
     //TODO:getTasksByListId();
-    this.tasks.push();
+  }
+  ngOnInit() {
+    this.tasks = this._tasks;
+    console.log(this.title);
+    console.log(this._tasks);
   }
 
   createTaskAction() {
-    this.tasks.push();
+    var task: taskDTO = {
+      name: this.taskNameCtrl?.value.trim(),
+      desc: '',
+      done: false,
+    };
+    this.tasks.push(task);
+    this.createTaskBool = false;
   }
 
   createTask() {

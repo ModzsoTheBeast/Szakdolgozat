@@ -1,6 +1,6 @@
 <mat-card class="example-container">
   <h5 style="text-transform: uppercase; text-align: center">
-    {{ title }} - {{ tasks.length }}
+    {{ title }} - {{ tasks?.length ? tasks.length : 0 }}
   </h5>
   <div
     cdkDropList
@@ -15,11 +15,11 @@
       ></app-task>
     </div>
   </div>
-  <div
-    *ngIf="createTaskBool; else elseBlock"
-    style="display: flex; width: 100%; margin-top: 1em"
-  >
-    <form [formGroup]="createTaskForm">
+  <div *ngIf="createTaskBool; else elseBlock">
+    <form
+      [formGroup]="createTaskForm"
+      style="display: flex; width: 100%; margin-top: 1em; align-items: center"
+    >
       <mat-form-field>
         <mat-label>Kártyanév</mat-label>
         <input
@@ -32,14 +32,15 @@
         <mat-error *ngIf="taskNameCtrl?.invalid && taskNameCtrl?.touched">
           Kötelező!
         </mat-error>
-        <button
-          mat-icon-button
-          [disabled]="createTaskForm.invalid"
-          (click)="createTaskAction()"
-        >
-          <mat-icon color="primary">create</mat-icon>
-        </button>
       </mat-form-field>
+      <div style="width: 100%"></div>
+      <button
+        mat-icon-button
+        [disabled]="createTaskForm.invalid"
+        (click)="createTaskAction()"
+      >
+        <mat-icon color="accent">add</mat-icon>
+      </button>
     </form>
   </div>
   <ng-template #elseBlock>

@@ -1,5 +1,6 @@
 <div
   cdkDropListGroup
+  style="height: 100vh"
   class="wrapper parent"
   #elemt
   (mousedown)="startDragging($event, false, elemt)"
@@ -7,8 +8,12 @@
   (mouseleave)="stopDragging($event, false)"
   (mousemove)="moveEvent($event, elemt)"
 >
-  <div class="child" *ngFor="let listData of lists">
-    <app-task-section [title]="listData.title"></app-task-section>
+  <div class="child" *ngFor="let list of lists">
+    {{ list.listName }}{{ list.tasks }}
+    <app-task-section
+      [title]="list.listName"
+      [_tasks]="list.tasks"
+    ></app-task-section>
   </div>
   <div *ngIf="lists.length != 0; then thenBlock; else elseBlock"></div>
   <ng-template #thenBlock>

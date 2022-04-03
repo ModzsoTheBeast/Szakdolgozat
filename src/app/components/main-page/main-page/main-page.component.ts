@@ -3,9 +3,10 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
+import { ListDTO } from 'src/app/DTOs/ListDTOs';
 import { CreateListService } from 'src/app/services/create-list/create-list.service';
 import Swal from 'sweetalert2';
 import { CreateListDialogComponent } from '../../dialogs/create-list-dialog/create-list-dialog/create-list-dialog.component';
@@ -15,32 +16,121 @@ import { CreateListDialogComponent } from '../../dialogs/create-list-dialog/crea
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.scss'],
 })
-export class MainPageComponent {
+export class MainPageComponent implements OnInit {
   //dragscroll
   mouseDown = false;
   startX: any;
   scrollLeft: any;
   slider = document.querySelector<HTMLElement>('.parent');
   //variables for data
-  lists: any[];
   title: string;
   listName: string = '';
   listNameSrc: Subject<string>;
+
+  dumyData: ListDTO[] = [
+    {
+      id: 1,
+      listName: 'list1',
+      tasks: [
+        {
+          id: 1,
+          name: 'name11',
+          desc: 'desc11',
+          done: false,
+        },
+        {
+          id: 2,
+          name: 'name21',
+          desc: 'desc21',
+          done: false,
+        },
+        {
+          id: 3,
+          name: 'name31',
+          desc: 'desc31',
+          done: false,
+        },
+      ],
+    },
+    {
+      id: 2,
+      listName: 'list2',
+      tasks: [
+        {
+          id: 1,
+          name: 'name12',
+          desc: 'desc12',
+          done: false,
+        },
+        {
+          id: 2,
+          name: 'name21',
+          desc: 'desc21',
+          done: false,
+        },
+        {
+          id: 3,
+          name: 'name31',
+          desc: 'desc31',
+          done: false,
+        },
+      ],
+    },
+    {
+      id: 3,
+      listName: 'list3',
+      tasks: [
+        {
+          id: 1,
+          name: 'name13',
+          desc: 'desc13',
+          done: false,
+        },
+        {
+          id: 2,
+          name: 'name21',
+          desc: 'desc21',
+          done: false,
+        },
+        {
+          id: 3,
+          name: 'name31',
+          desc: 'desc31',
+          done: false,
+        },
+      ],
+    },
+    {
+      id: 4,
+      listName: 'list4',
+      tasks: [],
+    },
+  ];
+
+  lists: any[];
   constructor(
     public dialog: MatDialog,
     private listService: CreateListService
   ) {
-    this.lists = [];
     /*TODO: getAllLists().subscribe(res => {
       this.lists = [{id: res.id, title: res.title}];
     })*/
+
     this.listService.myMethod$.subscribe((data) => {
       this.title = data;
-      this.lists.push({ title: this.title });
+      var lista: ListDTO = {
+        listName: this.title,
+        tasks: [],
+      };
+      this.lists.push(lista);
       //TODO: setList();
     });
   }
 
+  ngOnInit() {
+    var data = this.dumyData;
+    this.lists = data;
+  }
   async createListDialog() {
     const dialogConfig = new MatDialogConfig();
 
