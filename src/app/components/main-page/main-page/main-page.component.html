@@ -9,7 +9,6 @@
   (mousemove)="moveEvent($event, elemt)"
 >
   <div class="child" *ngFor="let list of lists">
-    {{ list.listName }}{{ list.tasks }}
     <app-task-section
       [title]="list.listName"
       [_tasks]="list.tasks"
@@ -18,7 +17,14 @@
   <div *ngIf="lists.length != 0; then thenBlock; else elseBlock"></div>
   <ng-template #thenBlock>
     <div style="margin-top: 36px">
-      <button mat-fab color="primary" (click)="createListDialog()">
+      <button
+        mat-fab
+        color="primary"
+        (click)="createListDialog()"
+        matTooltip="Lista hozzáadása."
+        matTooltipPosition="below"
+        matTooltipHideDelay="500"
+      >
         <mat-icon>add</mat-icon>
       </button>
     </div>

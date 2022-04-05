@@ -10,3 +10,9 @@ export interface UserLoginDTO {
   user_name: string;
   password: string;
 }
+
+export interface UserUpdateDTO {
+  user_name?: string;
+  password?: string;
+  email?: string;
+}

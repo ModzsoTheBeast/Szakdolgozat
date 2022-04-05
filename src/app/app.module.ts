@@ -23,6 +23,7 @@ import { AddUserToProjectDialogComponent } from './components/dialogs/add-user-t
 import { UserUpdateDialogComponent } from './components/dialogs/user-update-dialog/user-update-dialog/user-update-dialog.component';
 import { CreateListDialogComponent } from './components/dialogs/create-list-dialog/create-list-dialog/create-list-dialog.component';
 import { TestComponent } from './components/dialogs/test/test/test.component';
+import { CreateProjectDialogComponent } from './components/dialogs/create-project-dialog/create-project-dialog/create-project-dialog.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { TestComponent } from './components/dialogs/test/test/test.component';
     UserUpdateDialogComponent,
     CreateListDialogComponent,
     TestComponent,
+    CreateProjectDialogComponent,
   ],
   imports: [
     BrowserModule,

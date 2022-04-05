@@ -6,8 +6,9 @@
   vertical-align: top;
   margin-top: 2rem;
   height: auto;
-  max-height: 82vh;
+  max-height: 90vh;
   margin-bottom: 0;
+  overflow: hidden;
 }
 
 .example-list {
@@ -75,3 +76,4 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+

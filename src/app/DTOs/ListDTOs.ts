@@ -9,3 +9,8 @@ export interface ListDTO {
   listName: string;
   tasks: taskDTO[];
 }
+
+export interface ListsDataObj {
+  listName: string;
+  listTasksNumber: number;
+}

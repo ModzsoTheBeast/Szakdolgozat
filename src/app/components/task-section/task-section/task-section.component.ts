@@ -36,6 +36,7 @@ export class TaskSectionComponent implements OnInit {
     };
     this.tasks.push(task);
     this.createTaskBool = false;
+    this.createTaskForm.reset();
   }
 
   createTask() {

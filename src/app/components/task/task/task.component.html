@@ -1,10 +1,11 @@
 <div class="example-box" cdkDrag>
+  <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
   <mat-expansion-panel
     style="width: 100%; height: auto"
     (opened)="panelOpenState = true"
     (closed)="panelOpenState = false"
   >
-    <mat-expansion-panel-header class="example-box" cdkDrag>
+    <mat-expansion-panel-header class="example-box">
       <mat-panel-title> {{ taskName }}</mat-panel-title>
     </mat-expansion-panel-header>
     <mat-panel-description style="height: auto; vertical-align: middle">

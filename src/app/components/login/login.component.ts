@@ -10,6 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { HeaderServiceService } from 'src/app/services/header-service/header-service.service';
+import { ThemeService } from 'src/app/services/theme-service/theme-service';
 import { UserService } from 'src/app/services/user-service/user.service';
 import { HeaderComponent } from '../header/header.component';
 
@@ -34,8 +35,10 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private snackBar: MatSnackBar,
-    private header: HeaderServiceService
+    private header: HeaderServiceService,
+    private theme: ThemeService
   ) {
+    this.theme.update('dark-mode');
     this.userForm = this.fb.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(3)]],
@@ -65,9 +68,19 @@ export class LoginComponent implements OnInit {
         (next) => {
           this.header.changeIsLoggedIn((this.isLoggedIn = true));
           this.router.navigate(['projects']);
+          localStorage.setItem(
+            'loggedInUser',
+            JSON.stringify(this.username?.value)
+          );
         },
         (err: HttpErrorResponse) => {
           console.log(err);
+          localStorage.setItem(
+            //ezt majd törölni kell
+            'loggedInUser',
+            JSON.stringify(this.username?.value)
+          );
+          this.header.changeIsLoggedInUser(this.username?.value);
           this.snackBar.open('Sikertelen bejelentkezés', '', {
             duration: this.durationInSeconds * 1000,
           });
