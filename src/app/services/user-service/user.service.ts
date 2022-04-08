@@ -10,14 +10,14 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   createUser(user: UserDTO) {
-    return this.http.post<UserDTO>(
-      `${environment.apiUrl}/api/user/register`,
-      user
-    );
+    return this.http.post<UserDTO>(`${environment.apiUrl}/api/users`, user);
   }
 
   userLogin(user: UserLoginDTO) {
-    return this.http.get<UserLoginDTO>(`${environment.apiUrl}/api/user/login`);
+    return this.http.post<UserLoginDTO>(
+      `${environment.apiUrl}/api/users`,
+      user
+    );
   }
 
   userUpdate(user: UserUpdateDTO, userId: string) {

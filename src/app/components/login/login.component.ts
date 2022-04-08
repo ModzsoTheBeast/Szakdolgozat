@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit {
     this.isLoading = true;
     this.userService
       .userLogin({
-        user_name: this.username?.value,
+        userName: this.username?.value,
         password: this.password?.value,
       })
       .subscribe(

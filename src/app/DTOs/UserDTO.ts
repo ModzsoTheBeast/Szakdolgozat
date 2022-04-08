@@ -1,13 +1,13 @@
 export class UserDTO {
-  user_name: string;
+  userName: string;
   password: string;
-  email: string;
-  firstname: string;
-  lastname: string;
+  userEmail: string;
+  firstName: string;
+  lastName: string;
 }
 
 export interface UserLoginDTO {
-  user_name: string;
+  userName: string;
   password: string;
 }
 

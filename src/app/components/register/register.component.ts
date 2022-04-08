@@ -60,11 +60,11 @@ export class RegisterComponent implements OnInit {
     this.isLoading = true;
     this.userService
       .createUser({
-        user_name: this.username?.value,
+        userName: this.username?.value,
         password: this.password?.value,
-        email: this.email?.value,
-        firstname: this.firstname?.value,
-        lastname: this.lastname?.value,
+        userEmail: this.email?.value,
+        firstName: this.firstname?.value,
+        lastName: this.lastname?.value,
       })
       .subscribe(
         (next) => {
