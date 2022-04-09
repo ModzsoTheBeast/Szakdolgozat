@@ -44,8 +44,6 @@ export class HeaderComponent {
     });
   }
 
-  openProfileDialog() {}
-
   moveToProject() {
     this.onMainPage = false;
     this.router.navigate(['projects']);
@@ -82,4 +80,8 @@ export class HeaderComponent {
     localStorage.clear();
     this.loggedInUser = '';
   }
+
+  openEditContributorsDialog(): void {}
+
+  openProfileDialog(): void {}
 }

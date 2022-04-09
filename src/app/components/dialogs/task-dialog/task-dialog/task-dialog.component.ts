@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-task-dialog',
@@ -7,11 +8,16 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./task-dialog.component.scss'],
 })
 export class TaskDialogComponent implements OnInit {
-  taskName: string = 'paceholderName';
   taskForm: FormGroup;
-  constructor(private formBuilder: FormBuilder) {}
 
-  ngOnInit(): void {}
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private formBuilder: FormBuilder
+  ) {}
+
+  ngOnInit(): void {
+    this.createTaskForm();
+  }
 
   submit() {
     console.log('asd ');
@@ -19,23 +25,7 @@ export class TaskDialogComponent implements OnInit {
 
   createTaskForm() {
     this.taskForm = this.formBuilder.group({
-      taskNameCtrl: [this.taskName, Validators.required],
-      barcode: ['', [Validators.maxLength(13)]],
-      productGroupCtrl: ['', Validators.required],
-      vat: ['', Validators.required],
-      secondaryVat: [''],
-      storages: [[]],
-      salePrice: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern('^[0-9]+[0-9]*$'),
-          Validators.max(9999999999),
-        ],
-      ],
-      printer: [{ name: 'Nincs nyomtató', id: 0 }],
-      color: [''],
-      unit: ['', Validators.required],
+      taskNameCtrl: [this.data.taskName, Validators.required],
     });
   }
 

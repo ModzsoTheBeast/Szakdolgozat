@@ -10,6 +10,7 @@
   >
     <div *ngFor="let taskData of tasks">
       <app-task
+        [taskID]="taskData.id"
         [taskName]="taskData.name"
         [taskDesc]="taskData.desc"
       ></app-task>

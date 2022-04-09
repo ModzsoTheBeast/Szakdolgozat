@@ -1,20 +1,23 @@
 <div
-  cdkDropListGroup
-  style="height: 100vh"
-  class="wrapper parent"
-  #elemt
-  (mousedown)="startDragging($event, false, elemt)"
+  class="position-absolute top-50 start-50 translate-middle"
+  style="width: 80vw; z-index: 100"
+  *ngIf="loading"
+>
+  <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+  <h3 style="color: #d9b08c">Listák és kártyák betöltése ...</h3>
+</div>
+<div cdkDropListGroup style="height: 100vh" class="wrapper parent" #elemt>
+  <!-- (mousedown)="startDragging($event, false, elemt)"
   (mouseup)="stopDragging($event, false)"
   (mouseleave)="stopDragging($event, false)"
-  (mousemove)="moveEvent($event, elemt)"
->
+  (mousemove)="moveEvent($event, elemt)" -->
   <div class="child" *ngFor="let list of lists">
     <app-task-section
       [title]="list.listName"
       [_tasks]="list.tasks"
     ></app-task-section>
   </div>
-  <div *ngIf="lists.length != 0; then thenBlock; else elseBlock"></div>
+  <div *ngIf="listsLength; then thenBlock; else elseBlock"></div>
   <ng-template #thenBlock>
     <div style="margin-top: 36px">
       <button

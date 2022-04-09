@@ -67,19 +67,23 @@ export class LoginComponent implements OnInit {
       .subscribe(
         (next) => {
           this.header.changeIsLoggedIn((this.isLoggedIn = true));
-          this.router.navigate(['projects']);
-          localStorage.setItem(
-            'loggedInUser',
-            JSON.stringify(this.username?.value)
-          );
+          localStorage.clear();
+          if (next.verified == true) {
+            localStorage.setItem(
+              'loggedInUser',
+              JSON.stringify({ name: next.userName, id: next.id })
+            );
+
+            this.router.navigate(['projects']);
+          } else {
+            this.snackBar.open('Sikertelen bejelentkezés', '', {
+              duration: this.durationInSeconds * 1000,
+            });
+          }
         },
         (err: HttpErrorResponse) => {
+          localStorage.clear();
           console.log(err);
-          localStorage.setItem(
-            //ezt majd törölni kell
-            'loggedInUser',
-            JSON.stringify(this.username?.value)
-          );
           this.header.changeIsLoggedInUser(this.username?.value);
           this.snackBar.open('Sikertelen bejelentkezés', '', {
             duration: this.durationInSeconds * 1000,

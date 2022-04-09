@@ -22,6 +22,7 @@ export class TaskSectionComponent implements OnInit {
     this.createListForm();
     //TODO:getTasksByListId();
   }
+
   ngOnInit() {
     this.tasks = this._tasks;
     console.log(this.title);
@@ -60,6 +61,7 @@ export class TaskSectionComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
+      console.log(event);
     } else {
       transferArrayItem(
         event.previousContainer.data,
@@ -67,6 +69,7 @@ export class TaskSectionComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
+      console.log(event);
     }
   }
 }

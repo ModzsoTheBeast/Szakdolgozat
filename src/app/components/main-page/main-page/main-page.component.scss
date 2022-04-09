@@ -3,7 +3,7 @@
   flex-direction: row;
   overflow: hidden;
   overflow-x: scroll;
-  overflow-y: hidden;
+  overflow-y: scroll;
   height: 100%;
 }
 .wrapper::-webkit-scrollbar {

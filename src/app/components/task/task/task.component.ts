@@ -9,10 +9,9 @@ import { TaskDialogComponent } from '../../dialogs/task-dialog/task-dialog/task-
   styleUrls: ['./task.component.scss'],
 })
 export class TaskComponent implements OnInit {
-  @Input()
-  taskName: string;
-  @Input()
-  taskDesc: string;
+  @Input() taskName: string;
+  @Input() taskDesc: string;
+  @Input() taskID: number;
 
   constructor(private dialog: MatDialog) {}
 
@@ -22,7 +21,6 @@ export class TaskComponent implements OnInit {
   contributors = [{ name: 'elso' }, { name: 'masodik' }];
   openTaskDialog() {
     const dialogConfig = new MatDialogConfig();
-
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.hasBackdrop = true;
@@ -34,6 +32,11 @@ export class TaskComponent implements OnInit {
       dialogConfig.width = '60vw';
       dialogConfig.height = '80vh';
     }
+    dialogConfig.data = {
+      taskName: this.taskName,
+      taskDesc: this.taskDesc,
+      taskID: this.taskID,
+    };
     this.dialog.open(TaskDialogComponent, dialogConfig);
   }
 }

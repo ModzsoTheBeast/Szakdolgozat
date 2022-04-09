@@ -16,7 +16,9 @@ export class ListServiceService {
     );
   }
 
-  getLists() {
-    return this.http.get<ListDTO>(`${environment.apiUrl}/api/getList`);
+  getLists(projectID: number) {
+    return this.http.get<ListDTO[]>(
+      `${environment.apiUrl}/api/lists/${projectID}`
+    );
   }
 }

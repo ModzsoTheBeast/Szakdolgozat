@@ -10,7 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LandingPageComponent } from './components/landing-page/landing-page.component';
 import { SidenavService } from './services/sidenav/sidenav.service';
 import { MainPageComponent } from './components/main-page/main-page/main-page.component';
@@ -24,6 +24,7 @@ import { UserUpdateDialogComponent } from './components/dialogs/user-update-dial
 import { CreateListDialogComponent } from './components/dialogs/create-list-dialog/create-list-dialog/create-list-dialog.component';
 import { TestComponent } from './components/dialogs/test/test/test.component';
 import { CreateProjectDialogComponent } from './components/dialogs/create-project-dialog/create-project-dialog/create-project-dialog.component';
+import { JwtInterceptor } from './models/JwtInterceptor';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,10 @@ import { CreateProjectDialogComponent } from './components/dialogs/create-projec
     HttpClientModule,
     ChartsModule,
   ],
-  providers: [SidenavService],
+  providers: [
+    SidenavService,
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -1,23 +1,53 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { UserDTO, UserLoginDTO, UserUpdateDTO } from '../../DTOs/UserDTO';
+
+export interface AuthenticationResponse {
+  userId: number;
+  token: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  constructor(private http: HttpClient) {}
+  public currentUserSubject: BehaviorSubject<UserLoginDTO>;
+  public currentUser: Observable<UserLoginDTO>;
+
+  constructor(private http: HttpClient) {
+    this.currentUserSubject = new BehaviorSubject<UserLoginDTO>(
+      JSON.parse(localStorage.getItem('currentUser') || '{}')
+    );
+    this.currentUser = this.currentUserSubject.asObservable();
+  }
+
+  public get currentUserValue(): UserLoginDTO {
+    return this.currentUserSubject.value;
+  }
 
   createUser(user: UserDTO) {
     return this.http.post<UserDTO>(`${environment.apiUrl}/api/users`, user);
   }
 
   userLogin(user: UserLoginDTO) {
-    return this.http.post<UserLoginDTO>(
-      `${environment.apiUrl}/api/users`,
-      user
-    );
+    return this.http
+      .post<AuthenticationResponse>(`${environment.apiUrl}/api/login`, user)
+      .pipe(
+        map((res) => {
+          const userasd: UserLoginDTO = {
+            id: res.userId,
+            userName: user.userName,
+            password: user.password,
+            token: res.token,
+          };
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          this.currentUserSubject.next(user);
+          return user;
+        })
+      );
   }
 
   userUpdate(user: UserUpdateDTO, userId: string) {

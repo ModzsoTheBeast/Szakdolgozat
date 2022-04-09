@@ -18,8 +18,10 @@ import { HeaderServiceService } from 'src/app/services/header-service/header-ser
 export class ProjectCardComponent implements OnInit {
   @Input() projectName: string;
   @Input() listsData: ListsDataObj[];
+  @Input() projectID: number;
 
   onMainPage: Boolean;
+  canvas: Boolean = true;
 
   public pieChartOptions: ChartOptions = {
     responsive: true,
@@ -39,10 +41,18 @@ export class ProjectCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.listsData.forEach((data) => {
-      (this.pieChartLabels as unknown as string[]).push(data.listName);
-      (this.pieChartData as unknown as number[]).push(data.listTasksNumber);
-    });
+    if (this.listsData.length == 0) {
+      this.canvas = false;
+      return;
+    } else {
+      this.listsData.forEach((data) => {
+        if (data.listTasksNumber == 0) this.canvas = false;
+        else this.canvas = true;
+
+        (this.pieChartLabels as unknown as string[]).push(data.listName);
+        (this.pieChartData as unknown as number[]).push(data.listTasksNumber);
+      });
+    }
   }
 
   moveToProject() {

@@ -10,6 +10,9 @@ import { ListDTO } from 'src/app/DTOs/ListDTOs';
 import { CreateListService } from 'src/app/services/create-list/create-list.service';
 import Swal from 'sweetalert2';
 import { CreateListDialogComponent } from '../../dialogs/create-list-dialog/create-list-dialog/create-list-dialog.component';
+import { ListServiceService } from '../../../services/list-service/list-service.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-main-page',
@@ -26,7 +29,8 @@ export class MainPageComponent implements OnInit {
   title: string;
   listName: string = '';
   listNameSrc: Subject<string>;
-
+  loading: Boolean;
+  listsLength: Boolean = false;
   dumyData: ListDTO[] = [
     {
       id: 1,
@@ -110,26 +114,41 @@ export class MainPageComponent implements OnInit {
   lists: any[];
   constructor(
     public dialog: MatDialog,
-    private listService: CreateListService
+    private listservice: ListServiceService,
+    private createListService: CreateListService,
+    private snackBar: MatSnackBar
   ) {
     /*TODO: getAllLists().subscribe(res => {
       this.lists = [{id: res.id, title: res.title}];
     })*/
 
-    this.listService.myMethod$.subscribe((data) => {
+    this.createListService.myMethod$.subscribe((data) => {
       this.title = data;
       var lista: ListDTO = {
         listName: this.title,
         tasks: [],
       };
       this.lists.push(lista);
+      this.listsLength = true;
       //TODO: setList();
     });
   }
 
   ngOnInit() {
-    var data = this.dumyData;
-    this.lists = data;
+    this.loading = true;
+    this.listservice.getLists(1).subscribe(
+      (res) => {
+        this.lists = res;
+        this.loading = false;
+        this.listsLength = true;
+      },
+      (error: HttpErrorResponse) => {
+        this.snackBar.open('A listák betöltése nem sikerült!', '', {
+          duration: 2000,
+        });
+        this.loading = false;
+      }
+    );
   }
   async createListDialog() {
     const dialogConfig = new MatDialogConfig();
@@ -156,6 +175,7 @@ export class MainPageComponent implements OnInit {
     flag: any,
     el: { offsetLeft: number; scrollLeft: any }
   ) {
+    setTimeout;
     this.mouseDown = true;
     this.startX = e.pageX - el.offsetLeft;
     this.scrollLeft = el.scrollLeft;
@@ -174,22 +194,5 @@ export class MainPageComponent implements OnInit {
     const x = e.pageX - el.offsetLeft;
     const scroll = x - this.startX;
     el.scrollLeft = this.scrollLeft - scroll;
-  }
-
-  drop(event: CdkDragDrop<string[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-    }
   }
 }

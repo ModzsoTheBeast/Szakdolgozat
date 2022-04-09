@@ -3,32 +3,64 @@
   <div *ngSwitchCase="'vertical'"></div>
 </ng-container>
 
-<mat-stepper
-  [orientation]="(stepperOrientation | async)!"
-  #stepper
-  style="
-    display: contents;
-    width: 80%;
-    height: 80vh;
-    justify-content: center;
-    align-items: center;
-  "
-  color="primary"
+<div
+  class="position-absolute top-50 start-50 translate-middle"
+  style="width: 80vw; z-index: 100"
+  *ngIf="loading"
 >
-  <ng-template matStepperIcon="edit" let-index="index">{{
-    index + 1
-  }}</ng-template>
-  <ng-template matStepperIcon="done" let-index="index">{{
-    index + 1
-  }}</ng-template>
-  <mat-step [label]="project.projectName" *ngFor="let project of projects">
-    <app-project-card
-      [projectName]="project.projectName"
-      [listsData]="project.listsData"
-    ></app-project-card>
-  </mat-step>
-</mat-stepper>
-<div class="addProjectBtn">
+  <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+  <h3 style="color: #d9b08c">Projektek betöltése ...</h3>
+</div>
+
+<div *ngIf="lengthIsOne; else elseBlock">
+  <app-project-card
+    *ngFor="let project of projects"
+    [projectID]="project.projectID"
+    [projectName]="project.projectName"
+    [listsData]="project.listsData"
+  ></app-project-card>
+</div>
+<ng-template #elseBlock>
+  <mat-stepper
+    [orientation]="(stepperOrientation | async)!"
+    #stepper
+    style="
+      display: contents;
+      width: 80%;
+      height: 80vh;
+      justify-content: center;
+      align-items: center;
+    "
+    color="primary"
+  >
+    <ng-template matStepperIcon="edit" let-index="index">{{
+      index + 1
+    }}</ng-template>
+    <ng-template matStepperIcon="done" let-index="index">{{
+      index + 1
+    }}</ng-template>
+    <mat-step [label]="project.projectName" *ngFor="let project of projects">
+      <app-project-card
+        [projectID]="project.projectID"
+        [projectName]="project.projectName"
+        [listsData]="project.listsData"
+      ></app-project-card>
+    </mat-step>
+  </mat-stepper>
+</ng-template>
+<div class="addProjectBtn" *ngIf="!loading">
+  <h1
+    *ngIf="!projects"
+    style="
+      display: block;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 10%;
+      color: #d9b08c;
+    "
+  >
+    Hozz létre egy projektet!
+  </h1>
   <button
     mat-fab
     color="accent"
@@ -36,6 +68,7 @@
     matTooltip="Projekt létrehozása."
     matTooltipPosition="below"
     matTooltipHideDelay="500"
+    (click)="createProject()"
   >
     <mat-icon>add</mat-icon>
   </button>

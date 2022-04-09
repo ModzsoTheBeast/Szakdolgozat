@@ -7,12 +7,16 @@ export class UserDTO {
 }
 
 export interface UserLoginDTO {
+  id?: number;
+  verified?: Boolean;
   userName: string;
   password: string;
+  token?: string;
 }
 
 export interface UserUpdateDTO {
-  user_name?: string;
+  id?: number;
+  userName?: string;
   password?: string;
-  email?: string;
+  userEmail?: string;
 }

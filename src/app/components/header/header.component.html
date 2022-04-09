@@ -111,7 +111,14 @@
       </button>
       <mat-menu #beforeMenu="matMenu" xPosition="before">
         <button mat-menu-item (click)="openProfileDialog()">
-          Profil <mat-icon>person</mat-icon>
+          Profil <mat-icon>verified_user</mat-icon>
+        </button>
+        <button
+          *ngIf="onMainPage"
+          mat-menu-item
+          (click)="openEditContributorsDialog()"
+        >
+          Tagok <mat-icon>supervisor_account</mat-icon>
         </button>
       </mat-menu>
     </mat-toolbar-row>
