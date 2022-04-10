@@ -1,6 +1,7 @@
 import { taskDTO } from './TaskDTO';
 
 export interface CreteListObj {
+  listPosition: number;
   listName: string;
 }
 

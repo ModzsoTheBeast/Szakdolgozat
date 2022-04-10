@@ -81,6 +81,7 @@ export class HeaderComponent {
 
   logout() {
     this.isLoggedIn = false;
+    sessionStorage.clear();
     localStorage.clear();
     this.loggedInUser = '';
   }

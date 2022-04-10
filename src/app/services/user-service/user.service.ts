@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { contributorsDTO } from 'src/app/DTOs/ContributorDTO';
 import { environment } from 'src/environments/environment';
 import { UserDTO, UserLoginDTO, UserUpdateDTO } from '../../DTOs/UserDTO';
+import { JwtTokenService } from '../jwt-token-service/jwt-token.service';
 
 export interface AuthenticationResponse {
   userId: number;
@@ -18,7 +19,7 @@ export class UserService {
   public currentUserSubject: BehaviorSubject<UserLoginDTO>;
   public currentUser: Observable<UserLoginDTO>;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private jwtService: JwtTokenService) {
     this.currentUserSubject = new BehaviorSubject<UserLoginDTO>(
       JSON.parse(localStorage.getItem('loggedInUser') || '{}')
     );
@@ -35,15 +36,16 @@ export class UserService {
 
   userLogin(user: UserLoginDTO) {
     return this.http
-      .post<AuthenticationResponse>(`${environment.apiUrl}/api/login`, user)
+      .post<UserLoginDTO>(`${environment.apiUrl}/api/login`, user)
       .pipe(
         map((res) => {
           const userasd: UserLoginDTO = {
-            id: res.userId,
+            id: res.id,
             userName: user.userName,
             password: user.password,
             token: res.token,
           };
+          this.jwtService.saveJwtToken(res.token as string);
           localStorage.setItem('loggedInUser', JSON.stringify(user));
           this.currentUserSubject.next(user);
           return user;

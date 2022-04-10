@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, Injectable, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -24,6 +24,7 @@ export class CreateListDialogComponent implements OnInit {
   listForm: FormGroup;
   isLoading: boolean = false;
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: { currentListsLength: number },
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<CreateListDialogComponent>,
     private listService: ListServiceService,
@@ -44,6 +45,7 @@ export class CreateListDialogComponent implements OnInit {
     this.isLoading = true;
     this.listService
       .createList({
+        listPosition: this.data.currentListsLength + 1,
         listName: this.listNameCtrl?.value.trim(),
       })
       .subscribe(

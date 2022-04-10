@@ -6,6 +6,10 @@ import {
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
+  getCurrentProjectID,
+  getCurrentUserID,
+} from 'src/app/helpers/localStorage';
+import {
   MoveTaskDataBetweenTasksObj,
   MoveTaskDataObj,
   TaskServiceService,
@@ -23,8 +27,6 @@ export class TaskSectionComponent implements OnInit {
   createTaskForm: FormGroup;
   tasks: any[];
   createTaskBool: boolean = false;
-  userID: number;
-  projectID: number;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -36,15 +38,13 @@ export class TaskSectionComponent implements OnInit {
 
   ngOnInit() {
     this.tasks = this._tasks;
-    var pID = JSON.parse(localStorage.getItem('current_project') || '{}');
-    this.projectID = pID.id;
-    this.userID = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
     console.log(this.title);
     console.log(this._tasks);
   }
 
   createTaskAction() {
     var task: taskDTO = {
+      taskPosition: this.tasks.length + 1,
       name: this.taskNameCtrl?.value.trim(),
       desc: '',
       done: false,
@@ -77,8 +77,8 @@ export class TaskSectionComponent implements OnInit {
       );
       var listID = Number(event.container.id.substring(14));
       var obj1: MoveTaskDataObj = {
-        userid: this.userID,
-        projectid: this.projectID,
+        userid: getCurrentUserID(),
+        projectid: getCurrentProjectID(),
         listid: listID,
         fromPosition: event.previousIndex,
         toPosition: event.currentIndex,
@@ -99,8 +99,8 @@ export class TaskSectionComponent implements OnInit {
       var toListPosition = Number(event.container.id.substring(14));
       var fromListPosition = Number(event.previousContainer.id.substring(14));
       var obj: MoveTaskDataBetweenTasksObj = {
-        userid: this.userID,
-        projectid: this.projectID,
+        userid: getCurrentUserID(),
+        projectid: getCurrentProjectID(),
         fromPosition: event.previousIndex,
         toPosition: event.currentIndex,
         fromlistposition: fromListPosition,

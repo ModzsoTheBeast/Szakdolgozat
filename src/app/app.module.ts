@@ -24,7 +24,10 @@ import { UserUpdateDialogComponent } from './components/dialogs/user-update-dial
 import { CreateListDialogComponent } from './components/dialogs/create-list-dialog/create-list-dialog/create-list-dialog.component';
 import { TestComponent } from './components/dialogs/test/test/test.component';
 import { CreateProjectDialogComponent } from './components/dialogs/create-project-dialog/create-project-dialog/create-project-dialog.component';
-import { JwtInterceptor } from './models/JwtInterceptor';
+import {
+  AuthInterceptor,
+  AuthInterceptorProvider,
+} from './models/interceptors/AuthInterceptor';
 import { EditContributorComponent } from './components/dialogs/edit-contributors-dialog/edit-contributor/edit-contributor.component';
 
 @NgModule({
@@ -58,10 +61,7 @@ import { EditContributorComponent } from './components/dialogs/edit-contributors
     HttpClientModule,
     ChartsModule,
   ],
-  providers: [
-    SidenavService,
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-  ],
+  providers: [SidenavService, AuthInterceptorProvider],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

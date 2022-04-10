@@ -168,8 +168,9 @@ export class MainPageComponent implements OnInit {
       dialogConfig.width = '40vw';
       dialogConfig.height = 'auto';
     }
+    var length = this.lists.length;
     dialogConfig.data = {
-      title: this.title,
+      currentListsLength: length,
     };
     const dialogRef = this.dialog.open(CreateListDialogComponent, dialogConfig);
   }
