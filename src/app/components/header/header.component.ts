@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { HeaderServiceService } from 'src/app/services/header-service/header-service.service';
 import { SidenavService } from 'src/app/services/sidenav/sidenav.service';
 import { ThemeService } from 'src/app/services/theme-service/theme-service';
+import { EditContributorComponent } from '../dialogs/edit-contributors-dialog/edit-contributor/edit-contributor.component';
+import { UserUpdateDialogComponent } from '../dialogs/user-update-dialog/user-update-dialog/user-update-dialog.component';
 
 @Component({
   selector: 'app-header',
@@ -25,7 +28,8 @@ export class HeaderComponent {
     private router: Router,
     private themeService: ThemeService,
     private sidenavService: SidenavService,
-    private header: HeaderServiceService
+    private header: HeaderServiceService,
+    public dialog: MatDialog
   ) {
     this.router.navigate(['login']);
     this.themeService.initTheme();
@@ -81,7 +85,38 @@ export class HeaderComponent {
     this.loggedInUser = '';
   }
 
-  openEditContributorsDialog(): void {}
+  openEditContributorsDialog(): void {
+    const dialogConfig = new MatDialogConfig();
 
-  openProfileDialog(): void {}
+    dialogConfig.autoFocus = true;
+    dialogConfig.hasBackdrop = true;
+    dialogConfig.panelClass = ['task-dialog'];
+    if (window.innerWidth < 768) {
+      dialogConfig.width = 'auto';
+      dialogConfig.height = 'auto';
+    } else {
+      dialogConfig.width = '40vw';
+      dialogConfig.height = 'auto';
+    }
+    const dialogRef = this.dialog.open(EditContributorComponent, dialogConfig);
+  }
+
+  openProfileDialog(): void {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.autoFocus = true;
+    dialogConfig.hasBackdrop = true;
+    dialogConfig.panelClass = ['userUpdate-dialog'];
+    if (window.innerWidth < 768) {
+      dialogConfig.width = 'auto';
+      dialogConfig.height = 'auto';
+    } else {
+      dialogConfig.width = '40vw';
+      dialogConfig.height = 'auto';
+    }
+    dialogConfig.data = {
+      name: this.loggedInUser,
+    };
+    const dialogRef = this.dialog.open(UserUpdateDialogComponent, dialogConfig);
+  }
 }

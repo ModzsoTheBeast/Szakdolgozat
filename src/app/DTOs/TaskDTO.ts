@@ -3,6 +3,7 @@ import { contributorsDTO } from './ContributorDTO';
 
 export interface taskDTO {
   id?: number;
+  taskPosition?: number;
   name: string;
   desc: string;
   done: boolean;

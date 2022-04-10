@@ -10,7 +10,10 @@ import { ListDTO } from 'src/app/DTOs/ListDTOs';
 import { CreateListService } from 'src/app/services/create-list/create-list.service';
 import Swal from 'sweetalert2';
 import { CreateListDialogComponent } from '../../dialogs/create-list-dialog/create-list-dialog/create-list-dialog.component';
-import { ListServiceService } from '../../../services/list-service/list-service.service';
+import {
+  ListServiceService,
+  MoveListDataObj,
+} from '../../../services/list-service/list-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -21,6 +24,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class MainPageComponent implements OnInit {
   //dragscroll
+  userID: number;
+  projectID: number;
   mouseDown = false;
   startX: any;
   scrollLeft: any;
@@ -118,10 +123,6 @@ export class MainPageComponent implements OnInit {
     private createListService: CreateListService,
     private snackBar: MatSnackBar
   ) {
-    /*TODO: getAllLists().subscribe(res => {
-      this.lists = [{id: res.id, title: res.title}];
-    })*/
-
     this.createListService.myMethod$.subscribe((data) => {
       this.title = data;
       var lista: ListDTO = {
@@ -130,19 +131,22 @@ export class MainPageComponent implements OnInit {
       };
       this.lists.push(lista);
       this.listsLength = true;
-      //TODO: setList();
     });
   }
 
   ngOnInit() {
     this.loading = true;
-    this.listservice.getLists(1).subscribe(
+    var pID = JSON.parse(localStorage.getItem('current_project') || '{}');
+    this.projectID = pID.id;
+    this.userID = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
+    this.listservice.getLists(this.projectID).subscribe(
       (res) => {
         this.lists = res;
         this.loading = false;
         this.listsLength = true;
       },
       (error: HttpErrorResponse) => {
+        this.lists = this.dumyData;
         this.snackBar.open('A listák betöltése nem sikerült!', '', {
           duration: 2000,
         });
@@ -194,5 +198,20 @@ export class MainPageComponent implements OnInit {
     const x = e.pageX - el.offsetLeft;
     const scroll = x - this.startX;
     el.scrollLeft = this.scrollLeft - scroll;
+  }
+  drop(event: CdkDragDrop<ListDTO[]>) {
+    moveItemInArray(this.lists, event.previousIndex, event.currentIndex);
+    var obj: MoveListDataObj = {
+      userid: this.userID,
+      projectid: this.projectID,
+      fromPosition: event.previousIndex,
+      toPosition: event.currentIndex,
+    };
+    try {
+      this.listservice.moveList(obj).subscribe();
+    } catch (e) {
+      console.log(e);
+    }
+    console.log(event);
   }
 }

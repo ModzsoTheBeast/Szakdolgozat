@@ -82,7 +82,6 @@ export class LoginComponent implements OnInit {
           }
         },
         (err: HttpErrorResponse) => {
-          localStorage.clear();
           console.log(err);
           this.header.changeIsLoggedInUser(this.username?.value);
           this.snackBar.open('Sikertelen bejelentkezés', '', {

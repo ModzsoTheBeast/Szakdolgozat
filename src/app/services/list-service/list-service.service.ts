@@ -21,4 +21,18 @@ export class ListServiceService {
       `${environment.apiUrl}/api/lists/${projectID}`
     );
   }
+
+  moveList(moveListData: MoveListDataObj) {
+    return this.http.post<MoveListDataObj>(
+      `${environment.apiUrl}/api/list/create`,
+      moveListData
+    );
+  }
+}
+
+export class MoveListDataObj {
+  userid: number;
+  projectid: number;
+  fromPosition: number;
+  toPosition: number;
 }

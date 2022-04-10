@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { contributorsDTO } from 'src/app/DTOs/ContributorDTO';
 import { environment } from 'src/environments/environment';
 import { UserDTO, UserLoginDTO, UserUpdateDTO } from '../../DTOs/UserDTO';
 
@@ -19,7 +20,7 @@ export class UserService {
 
   constructor(private http: HttpClient) {
     this.currentUserSubject = new BehaviorSubject<UserLoginDTO>(
-      JSON.parse(localStorage.getItem('currentUser') || '{}')
+      JSON.parse(localStorage.getItem('loggedInUser') || '{}')
     );
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -43,7 +44,7 @@ export class UserService {
             password: user.password,
             token: res.token,
           };
-          localStorage.setItem('currentUser', JSON.stringify(user));
+          localStorage.setItem('loggedInUser', JSON.stringify(user));
           this.currentUserSubject.next(user);
           return user;
         })
@@ -54,6 +55,19 @@ export class UserService {
     return this.http.put<UserUpdateDTO>(
       `${environment.apiUrl}/api/user/update/${userId}`,
       user
+    );
+  }
+
+  getAllContributors(projectID: number) {
+    return this.http.get<contributorsDTO[]>(
+      `${environment.apiUrl}/api/contributors/${projectID}`
+    );
+  }
+
+  saveContributors(contributors: contributorsDTO[]) {
+    return this.http.post<contributorsDTO[]>(
+      `${environment.apiUrl}/api/users`,
+      contributors
     );
   }
 }

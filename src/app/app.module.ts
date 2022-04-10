@@ -25,6 +25,7 @@ import { CreateListDialogComponent } from './components/dialogs/create-list-dial
 import { TestComponent } from './components/dialogs/test/test/test.component';
 import { CreateProjectDialogComponent } from './components/dialogs/create-project-dialog/create-project-dialog/create-project-dialog.component';
 import { JwtInterceptor } from './models/JwtInterceptor';
+import { EditContributorComponent } from './components/dialogs/edit-contributors-dialog/edit-contributor/edit-contributor.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { JwtInterceptor } from './models/JwtInterceptor';
     CreateListDialogComponent,
     TestComponent,
     CreateProjectDialogComponent,
+    EditContributorComponent,
   ],
   imports: [
     BrowserModule,

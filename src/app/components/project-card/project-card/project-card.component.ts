@@ -57,6 +57,7 @@ export class ProjectCardComponent implements OnInit {
 
   moveToProject() {
     this.header.changeOnMainPage((this.onMainPage = true));
+    localStorage.setItem('current_project', JSON.stringify(this.projectID));
     this.router.navigate(['main']);
   }
 }

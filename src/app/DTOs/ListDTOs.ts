@@ -6,6 +6,7 @@ export interface CreteListObj {
 
 export interface ListDTO {
   id?: number;
+  listPosition?: number;
   listName: string;
   tasks: taskDTO[];
 }

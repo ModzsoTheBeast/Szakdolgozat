@@ -5,6 +5,11 @@ import {
 } from '@angular/cdk/drag-drop';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  MoveTaskDataBetweenTasksObj,
+  MoveTaskDataObj,
+  TaskServiceService,
+} from 'src/app/services/task-service/task-service.service';
 import { taskDTO } from '../../../DTOs/TaskDTO';
 @Component({
   selector: 'app-task-section',
@@ -18,13 +23,22 @@ export class TaskSectionComponent implements OnInit {
   createTaskForm: FormGroup;
   tasks: any[];
   createTaskBool: boolean = false;
-  constructor(private formBuilder: FormBuilder) {
+  userID: number;
+  projectID: number;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private taskService: TaskServiceService
+  ) {
     this.createListForm();
     //TODO:getTasksByListId();
   }
 
   ngOnInit() {
     this.tasks = this._tasks;
+    var pID = JSON.parse(localStorage.getItem('current_project') || '{}');
+    this.projectID = pID.id;
+    this.userID = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
     console.log(this.title);
     console.log(this._tasks);
   }
@@ -61,6 +75,19 @@ export class TaskSectionComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
+      var listID = Number(event.container.id.substring(14));
+      var obj1: MoveTaskDataObj = {
+        userid: this.userID,
+        projectid: this.projectID,
+        listid: listID,
+        fromPosition: event.previousIndex,
+        toPosition: event.currentIndex,
+      };
+      try {
+        this.taskService.moveTask(obj1).subscribe();
+      } catch (e) {
+        console.log(e);
+      }
       console.log(event);
     } else {
       transferArrayItem(
@@ -69,6 +96,21 @@ export class TaskSectionComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
+      var toListPosition = Number(event.container.id.substring(14));
+      var fromListPosition = Number(event.previousContainer.id.substring(14));
+      var obj: MoveTaskDataBetweenTasksObj = {
+        userid: this.userID,
+        projectid: this.projectID,
+        fromPosition: event.previousIndex,
+        toPosition: event.currentIndex,
+        fromlistposition: fromListPosition,
+        tolistposition: toListPosition,
+      };
+      try {
+        this.taskService.moveTaskDataBetweenTasks(obj).subscribe();
+      } catch (e) {
+        console.log(e);
+      }
       console.log(event);
     }
   }
