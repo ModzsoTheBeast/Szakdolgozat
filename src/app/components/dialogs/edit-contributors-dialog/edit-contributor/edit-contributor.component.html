@@ -1,4 +1,44 @@
 <mat-dialog-content>
+  <mat-toolbar color="primary">Projekt tagok</mat-toolbar>
+  <!-- <form class="example-form" [action]="toEmail" method="POST">
+    <mat-form-field class="example-full-width" appearance="outline">
+      <mat-label
+        >Felhasználó meghívása<mat-icon
+          style="vertical-align: middle; margin-left: 1em"
+          >email</mat-icon
+        ></mat-label
+      >
+      <input
+        name="email"
+        type="email"
+        placeholder="Válaszd ki az e-mail címet"
+        aria-label="e-mail"
+        matInput
+        [formControl]="myControl"
+        [matAutocomplete]="auto"
+        required
+      />
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-option
+          *ngFor="let option of filteredOptions | async"
+          [value]="option"
+        >
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
+      <input type="hidden" name="_subject" value="Projekt meghívó!" />
+      <input type="hidden" name="message" value="Projekt meghívó!" />
+      <input type="hidden" name="_next" value="http://localhost:4200/main" />
+    </mat-form-field>
+    <button mat-raised-button color="accent" type="submit">
+      Meghívó küldése
+    </button>
+  </form>-->
+  <form action="https://formsubmit.co/lokospatrik8@gmail.com" method="POST">
+    <input type="text" name="name" required />
+    <input type="email" name="email" required />
+    <button type="submit">Send</button>
+  </form>
   <mat-list>
     <mat-list-item *ngFor="let con of contr; last as last">
       <p mat-line class="demo-2">{{ con.name }}</p>

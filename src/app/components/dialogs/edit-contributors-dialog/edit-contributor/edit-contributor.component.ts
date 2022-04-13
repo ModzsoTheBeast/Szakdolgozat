@@ -1,6 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { contributorsDTO } from 'src/app/DTOs/ContributorDTO';
+import { getCurrentProjectID } from 'src/app/helpers/localStorage';
 import { roles } from 'src/app/models/enums/roleEnum';
 import { UserService } from 'src/app/services/user-service/user.service';
 
@@ -22,21 +26,44 @@ export class EditContributorComponent implements OnInit {
     'Support',
     'Egyéb',
   ];
+
+  //invite
+  myControl = new FormControl();
+  emailOptions: string[] = ['lokospatrik8@gmail.com'];
+  filteredOptions: Observable<string[]>;
+  toEmail: string = `https://formsubmit.co/${this.myControl.value}`;
+  //
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
+    let id = getCurrentProjectID();
+    this.userService.getAllEmails(id).subscribe((res: string[]) => {
+      this.emailOptions = res;
+    });
     this.userService.getAllContributors(1).subscribe(
       (resoult: any) => {
         this.contr = resoult;
       },
       (error: HttpErrorResponse) => {
         this.contr.push(
-          { name: 'asd', role: 'asddas' },
-          { name: 'asd', role: 'asddas' },
-          { name: 'asd', role: 'asddas' },
-          { name: 'asd', role: 'asddas' }
+          { id: 1, name: 'asd', role: 'asddas' },
+          { id: 2, name: 'asd', role: 'asddas' },
+          { id: 3, name: 'asd', role: 'asddas' },
+          { id: 4, name: 'asd', role: 'asddas' }
         );
       }
+    );
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value))
+    );
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.emailOptions.filter((option) =>
+      option.toLowerCase().includes(filterValue)
     );
   }
   onSubmit() {

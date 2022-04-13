@@ -9,7 +9,7 @@ export class UserDTO {
 export interface UserLoginDTO {
   id?: number;
   verified?: Boolean;
-  userName: string;
+  username: string;
   password: string;
   token?: string;
 }

@@ -33,8 +33,6 @@ export class TaskComponent implements OnInit {
       dialogConfig.height = '80vh';
     }
     dialogConfig.data = {
-      taskName: this.taskName,
-      taskDesc: this.taskDesc,
       taskID: this.taskID,
     };
     this.dialog.open(TaskDialogComponent, dialogConfig);

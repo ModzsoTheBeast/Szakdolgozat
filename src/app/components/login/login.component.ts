@@ -1,4 +1,4 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -9,6 +9,7 @@ import {
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { first } from 'rxjs/operators';
 import { HeaderServiceService } from 'src/app/services/header-service/header-service.service';
 import { ThemeService } from 'src/app/services/theme-service/theme-service';
 import { UserService } from 'src/app/services/user-service/user.service';
@@ -61,29 +62,25 @@ export class LoginComponent implements OnInit {
     this.isLoading = true;
     this.userService
       .userLogin({
-        userName: this.username?.value,
+        username: this.username?.value,
         password: this.password?.value,
       })
       .subscribe(
         (next) => {
           this.header.changeIsLoggedIn((this.isLoggedIn = true));
           localStorage.clear();
-          if (next.verified == true) {
-            localStorage.setItem(
-              'loggedInUser',
-              JSON.stringify({ name: next.userName, id: next.id })
-            );
-
-            this.router.navigate(['projects']);
-          } else {
-            this.snackBar.open('Sikertelen bejelentkezés', '', {
-              duration: this.durationInSeconds * 1000,
-            });
-          }
+          localStorage.setItem(
+            'loggedInUser',
+            JSON.stringify({
+              name: next.username,
+              id: next.id,
+              token: next.token,
+            })
+          );
+          this.router.navigate(['projects']);
+          this.isLoading = false;
         },
         (err: HttpErrorResponse) => {
-          console.log(err);
-          this.header.changeIsLoggedInUser(this.username?.value);
           this.snackBar.open('Sikertelen bejelentkezés', '', {
             duration: this.durationInSeconds * 1000,
           });

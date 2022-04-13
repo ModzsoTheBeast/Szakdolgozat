@@ -1,0 +1,31 @@
+<section class="example-section">
+  <span class="example-list-section">
+    <mat-checkbox
+      class="example-margin"
+      [checked]="allComplete"
+      color="accent"
+      [indeterminate]="someComplete()"
+      (change)="setAll($event.checked)"
+    >
+      {{ listData.name }}
+    </mat-checkbox>
+  </span>
+  <span class="example-list-section">
+    <ul>
+      <li *ngFor="let item of listData.items">
+        <mat-checkbox
+          [(ngModel)]="item.isDone"
+          color="accent"
+          (ngModelChange)="updateAllComplete()"
+        >
+          {{ item.name }}
+        </mat-checkbox>
+      </li>
+      <li>
+        <button mat-icon-button (click)="createNewItem()">
+          <mat-icon color="accent">add</mat-icon>
+        </button>
+      </li>
+    </ul>
+  </span>
+</section>

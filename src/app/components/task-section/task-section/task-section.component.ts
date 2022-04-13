@@ -21,6 +21,7 @@ import { taskDTO } from '../../../DTOs/TaskDTO';
   styleUrls: ['./task-section.component.scss'],
 })
 export class TaskSectionComponent implements OnInit {
+  @Input() listID: number;
   @Input() title: string;
   @Input() _tasks: taskDTO[];
 
@@ -50,6 +51,7 @@ export class TaskSectionComponent implements OnInit {
       done: false,
     };
     this.tasks.push(task);
+    this.taskService.createNewTask(task, this.listID);
     this.createTaskBool = false;
     this.createTaskForm.reset();
   }

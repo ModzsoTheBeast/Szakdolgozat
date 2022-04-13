@@ -1,26 +1,66 @@
-<form [formGroup]="taskForm" (click)="submit()">
-  <mat-toolbar>
-    <mat-form-field formControlName="taskNameCtrl">
-      <mat-label></mat-label>
-      <input matInput inputType="text" [value]="data.taskName" />
-      <mat-error *ngIf="taskNameCtrl?.invalid && taskNameCtrl?.touched">
-        lol
-      </mat-error>
-    </mat-form-field>
-    <!-- <div style="width: 100%"></div> -->
-    <button
-      mat-icon-button
-      color="prymary"
-      mat-dialog-close
-      style="align-self: flex-end"
-    >
-      <mat-icon>close</mat-icon>
-    </button>
-  </mat-toolbar>
-
-  <mat-dialog-content> </mat-dialog-content>
-</form>
-<mat-dialog-actions align="end">
-  <button mat-raised-button type="submit" color="primary">submit</button>
-  <button mat-button mat-dialog-close>close</button>
-</mat-dialog-actions>
+<div *ngFor="let item of dummyData.taskLists">
+  <app-task-list [_data]="item"></app-task-list>
+</div>
+<mat-dialog-content>
+  <form [formGroup]="taskForm">
+    <mat-toolbar class="d-block">
+      <h3
+        *ngIf="!nameEdit"
+        (click)="nameEdit = !nameEdit"
+        style="cursor: pointer"
+      >
+        {{ data.taskName }}
+      </h3>
+      <mat-form-field *ngIf="nameEdit" formControlName="taskNameCtrl">
+        <mat-label>Kártya név</mat-label>
+        <input matInput inputType="text" [value]="data.taskName" required />
+        <mat-error
+          *ngIf="taskNameCtrl?.hasError('required') && taskNameCtrl?.touched"
+        >
+          lol
+        </mat-error>
+      </mat-form-field>
+      <!-- <div style="width: 100%"></div> -->
+      <button
+        mat-icon-button
+        color="prymary"
+        mat-dialog-close
+        style="align-self: flex-end"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar>
+    <div class="d-inline content" style="width: 70%; height: 100%">
+      <mat-card></mat-card>
+    </div>
+    <div class="d-inline sidenav" style="width: 30%; height: 100%">
+      <button mat-raised-button color="primary" (click)="deleteTask()">
+        Kártya eltávolítása
+      </button>
+      <button mat-raised-button color="primary" (click)="createTaskList()">
+        Lista létrehozása
+      </button>
+    </div>
+  </form>
+  <mat-card class="d-block" style="margin-top: 10em">
+    <mat-card-title
+      >Shiba Inu
+      <button mat-icon-button color="accent" (click)="removeComment()">
+        <mat-icon>remove</mat-icon>
+      </button>
+    </mat-card-title>
+    <mat-card-subtitle>Dog Breed</mat-card-subtitle>
+    <mat-card-content>
+      <p>This card indeterminates progress bar.</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <!-- <button mat-icon-button (click)="like()">
+        <mat-icon color="accent">thumb_up</mat-icon>
+      </button> -->
+    </mat-card-actions>
+  </mat-card>
+  <mat-dialog-actions align="middle">
+    <button mat-raised-button (click)="submit()" color="primary">Mentés</button>
+    <button mat-button mat-dialog-close>close</button>
+  </mat-dialog-actions>
+</mat-dialog-content>

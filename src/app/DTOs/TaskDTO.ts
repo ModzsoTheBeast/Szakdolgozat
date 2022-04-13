@@ -1,5 +1,6 @@
 import { commentDTO } from './CommentDTO';
 import { contributorsDTO } from './ContributorDTO';
+import { taskListDTO } from './TaskListDTO';
 
 export interface taskDTO {
   id?: number;
@@ -17,5 +18,6 @@ export interface taskDetailDTO {
   comments?: commentDTO[];
   cretedBy: string;
   createdOn: Date;
-  deadline?: string;
+  deadline?: Date;
+  taskLists: taskListDTO[];
 }

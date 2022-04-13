@@ -70,6 +70,7 @@
             matTooltipHideDelay="500"
           ></mat-slide-toggle>
         </ng-template>
+
         <button
           style="min-width: 120px; justify-content: right; margin-left: 0.5rem"
           mat-raised-button
@@ -87,11 +88,12 @@
         <strong> Wecome, {{ loggedInUser }}! </strong>
       </span>
       <span class="example-spacer"></span>
+
       <button
         *ngIf="onMainPage"
         mat-raised-button
         matTooltip="Vissza a projektekhez!"
-        matTooltipPosition="left"
+        matTooltipPosition="below"
         matTooltipHideDelay="500"
         (click)="moveToProject()"
         color="accent"
@@ -99,6 +101,7 @@
       >
         <mat-icon>keyboard_backspace</mat-icon>
       </button>
+
       <button mat-icon-button>
         <mat-icon
           class="example-icon"

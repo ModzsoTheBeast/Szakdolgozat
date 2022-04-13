@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { HeaderServiceService } from 'src/app/services/header-service/header-service.service';
 import { SidenavService } from 'src/app/services/sidenav/sidenav.service';
 import { ThemeService } from 'src/app/services/theme-service/theme-service';
@@ -13,7 +15,7 @@ import { UserUpdateDialogComponent } from '../dialogs/user-update-dialog/user-up
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   IsLogin: boolean = true;
   isDarkMode: boolean;
   BtnTxt: string;
@@ -24,6 +26,7 @@ export class HeaderComponent {
   onMainPage: Boolean = false;
   onMainPageSrc: Subject<boolean>;
   //= JSON.parse(localStorage.getItem('loggedInUser')!);
+
   constructor(
     private router: Router,
     private themeService: ThemeService,
@@ -47,6 +50,8 @@ export class HeaderComponent {
       this.onMainPage = value;
     });
   }
+
+  ngOnInit(): void {}
 
   moveToProject() {
     this.onMainPage = false;

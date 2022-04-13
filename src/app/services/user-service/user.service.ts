@@ -6,7 +6,7 @@ import { contributorsDTO } from 'src/app/DTOs/ContributorDTO';
 import { environment } from 'src/environments/environment';
 import { UserDTO, UserLoginDTO, UserUpdateDTO } from '../../DTOs/UserDTO';
 import { JwtTokenService } from '../jwt-token-service/jwt-token.service';
-
+import { HttpHeaders } from '@angular/common/http';
 export interface AuthenticationResponse {
   userId: number;
   token: string;
@@ -26,6 +26,12 @@ export class UserService {
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
+  getAllEmails(projectID: number) {
+    return this.http.get<string[]>(
+      `${environment.apiUrl}/api/projects/${projectID}/emails`
+    );
+  }
+
   public get currentUserValue(): UserLoginDTO {
     return this.currentUserSubject.value;
   }
@@ -35,22 +41,21 @@ export class UserService {
   }
 
   userLogin(user: UserLoginDTO) {
-    return this.http
-      .post<UserLoginDTO>(`${environment.apiUrl}/api/login`, user)
-      .pipe(
-        map((res) => {
-          const userasd: UserLoginDTO = {
-            id: res.id,
-            userName: user.userName,
-            password: user.password,
-            token: res.token,
-          };
-          this.jwtService.saveJwtToken(res.token as string);
-          localStorage.setItem('loggedInUser', JSON.stringify(user));
-          this.currentUserSubject.next(user);
-          return user;
-        })
-      );
+    let body = new URLSearchParams();
+    body.set('username', user.username);
+    body.set('password', user.password);
+
+    let options = {
+      headers: new HttpHeaders().set(
+        'Content-Type',
+        'application/x-www-form-urlencoded'
+      ),
+    };
+    return this.http.post<UserLoginDTO>(
+      `${environment.apiUrl}/api/users/login`,
+      body,
+      options
+    );
   }
 
   userUpdate(user: UserUpdateDTO, userId: string) {
