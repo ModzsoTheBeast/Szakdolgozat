@@ -11,7 +11,7 @@ import {
   getCurrentProjectID,
   getCurrentUserID,
 } from 'src/app/helpers/localStorage';
-import { failResponse } from 'src/app/helpers/snack';
+import { snack } from 'src/app/helpers/snack';
 import { ListServiceService } from 'src/app/services/list-service/list-service.service';
 import {
   MoveTaskDataBetweenTasksObj,
@@ -42,7 +42,8 @@ export class TaskSectionComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private taskService: TaskServiceService,
-    private listService: ListServiceService
+    private listService: ListServiceService,
+    private snack: snack
   ) {
     this.createListForm();
   }
@@ -81,7 +82,7 @@ export class TaskSectionComponent implements OnInit {
     this.listService.moveListToRight(position).subscribe(
       (res) => {},
       (error: HttpErrorResponse) => {
-        failResponse('Lista mozgatása sikertelen volt :/');
+        this.snack.response('Lista mozgatása sikertelen volt :/', undefined, 1);
       }
     );
   }

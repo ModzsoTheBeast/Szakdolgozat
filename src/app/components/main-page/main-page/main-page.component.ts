@@ -127,17 +127,7 @@ export class MainPageComponent implements OnInit {
     private listservice: ListServiceService,
     private createListService: CreateListService,
     private snackBar: MatSnackBar
-  ) {
-    // this.createListService.myMethod$.subscribe((data) => {
-    //   this.title = data;
-    //   var lista: ListDTO = {
-    //     listName: this.title,
-    //     tasks: [],
-    //   };
-    //   this.lists.push(lista);
-    //   this.listsLength = true;
-    // });
-  }
+  ) {}
 
   ngOnInit() {
     this.loading = true;
@@ -234,18 +224,4 @@ export class MainPageComponent implements OnInit {
     const scroll = x - this.startX;
     el.scrollLeft = this.scrollLeft - scroll;
   }
-  // drop(event: CdkDragDrop<ListDTO[]>) {
-  //   moveItemInArray(this.lists, event.previousIndex, event.currentIndex);
-  //   var obj: MoveListDataObj = {
-  //     projectId: this.projectID,
-  //     startPosition: event.previousIndex,
-  //     endPosition: event.currentIndex,
-  //   };
-  //   try {
-  //     this.listservice.moveList(obj);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  //   console.log(event);
-  // }
 }
