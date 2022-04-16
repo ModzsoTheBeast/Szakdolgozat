@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ChartOptions, ChartType } from 'chart.js';
@@ -9,6 +10,7 @@ import {
 } from 'ng2-charts';
 import { ListsDataObj } from 'src/app/DTOs/ListDTOs';
 import { HeaderServiceService } from 'src/app/services/header-service/header-service.service';
+import { ProjectService } from 'src/app/services/project-service/project.service';
 
 @Component({
   selector: 'app-project-card',
@@ -35,24 +37,39 @@ export class ProjectCardComponent implements OnInit {
   public pieChartLegend = true;
   public pieChartPlugins = [];
 
-  constructor(private router: Router, private header: HeaderServiceService) {
+  constructor(
+    private router: Router,
+    private header: HeaderServiceService,
+    private projectService: ProjectService
+  ) {
     monkeyPatchChartJsTooltip();
     monkeyPatchChartJsLegend();
   }
 
   ngOnInit(): void {
-    if (this.listsData.length == 0) {
+    if (!this.listsData || this.listsData == [] || this.listsData.length == 0) {
       this.canvas = false;
       return;
     } else {
+      let number = 0;
       this.listsData.forEach((data) => {
-        if (data.listTasksNumber == 0) this.canvas = false;
-        else this.canvas = true;
+        number += data.taskNumber;
+        if (number != 0) {
+          this.canvas = true;
+        }
+        if (number == 0) this.canvas = false;
 
         (this.pieChartLabels as unknown as string[]).push(data.listName);
-        (this.pieChartData as unknown as number[]).push(data.listTasksNumber);
+        (this.pieChartData as unknown as number[]).push(data.taskNumber);
       });
     }
+  }
+
+  deleteProject() {
+    this.projectService.deleteProject(this.projectID).subscribe(
+      () => {},
+      (error: HttpErrorResponse) => {}
+    );
   }
 
   moveToProject() {

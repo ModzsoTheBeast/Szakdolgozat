@@ -20,3 +20,6 @@ export interface UserUpdateDTO {
   password?: string;
   userEmail?: string;
 }
+export interface UserIDDTO {
+  id: number;
+}

@@ -13,9 +13,12 @@ export class TaskComponent implements OnInit {
   @Input() taskDesc: string;
   @Input() taskID: number;
 
+  name: string;
   constructor(private dialog: MatDialog) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.name = this.taskName;
+  }
 
   panelOpenState: boolean = false;
   contributors = [{ name: 'elso' }, { name: 'masodik' }];

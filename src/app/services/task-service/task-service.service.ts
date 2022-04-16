@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { commentDTO } from 'src/app/DTOs/CommentDTO';
 import { contributorsDTO } from 'src/app/DTOs/ContributorDTO';
-import { taskDetailDTO, taskDTO } from 'src/app/DTOs/TaskDTO';
+import { createTaskDTO, taskDetailDTO, taskDTO } from 'src/app/DTOs/TaskDTO';
 import { taskListDTO, taskListItemDTO } from 'src/app/DTOs/TaskListDTO';
 import { environment } from 'src/environments/environment';
 
@@ -19,9 +19,9 @@ export class TaskServiceService {
     );
   }
 
-  createNewTask(task: taskDTO, listID: number) {
-    return this.http.post<taskDTO>(
-      `${environment.apiUrl}/api/task/create/${listID}`,
+  createNewTask(task: createTaskDTO) {
+    return this.http.post<createTaskDTO>(
+      `${environment.apiUrl}/api/task`,
       task
     );
   }
@@ -43,14 +43,14 @@ export class TaskServiceService {
     moveTaskDataBetweenTasksData: MoveTaskDataBetweenTasksObj
   ) {
     return this.http.post<MoveTaskDataBetweenTasksObj>(
-      `${environment.apiUrl}/api/task/moveBetweenLists`,
+      `${environment.apiUrl}/api/task/movetaskbetweenlists`,
       moveTaskDataBetweenTasksData
     );
   }
 
   moveTask(moveTaskData: MoveTaskDataObj) {
     return this.http.post<MoveTaskDataObj>(
-      `${environment.apiUrl}/api/task/moveInList`,
+      `${environment.apiUrl}/api/task/movetaskinlist`,
       moveTaskData
     );
   }
@@ -64,18 +64,16 @@ export class TaskServiceService {
 }
 
 export class MoveTaskDataObj {
-  listid: number;
-  userid: number;
-  projectid: number;
-  fromPosition: number;
-  toPosition: number;
+  listId: number;
+  startPosition: number;
+  endPosition: number;
 }
 
 export class MoveTaskDataBetweenTasksObj {
-  fromlistposition: number;
-  tolistposition: number;
-  userid: number;
-  projectid: number;
-  fromPosition: number;
-  toPosition: number;
+  startListId: number;
+  endListId: number;
+  startTaskPosition: number;
+  endTaskPosition: number;
+  startListLength: number;
+  endListLength: number;
 }

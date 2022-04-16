@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
+import { getCurrentUserID } from 'src/app/helpers/localStorage';
 import { CreateListService } from 'src/app/services/create-list/create-list.service';
 import { ListServiceService } from 'src/app/services/list-service/list-service.service';
 import { ProjectService } from 'src/app/services/project-service/project.service';
@@ -18,7 +19,7 @@ export class CreateProjectDialogComponent implements OnInit {
   listNameSrc: Subject<string>;
   listForm: FormGroup;
   isLoading: boolean = false;
-  user = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
+  user: number;
   constructor(
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<CreateProjectDialogComponent>,
@@ -28,7 +29,9 @@ export class CreateProjectDialogComponent implements OnInit {
     this.createListForm();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.user = getCurrentUserID();
+  }
 
   submit() {
     if (
@@ -37,16 +40,18 @@ export class CreateProjectDialogComponent implements OnInit {
     )
       return;
     this.isLoading = true;
+    console.log('asdf');
     this.projectService
       .createProjects({
-        userID: this.user.id,
+        userId: this.user,
         projectName: this.projectNameCtrl?.value.trim(),
       })
       .subscribe(
         (next) => {
-          this.projectService.myMethod(next.projectName);
+          //this.projectService.myMethod(next.projectName);
           this.isLoading = false;
           this.dialogRef.close();
+          console.log(next);
         },
         (err: HttpErrorResponse) => {
           console.log(err);

@@ -1,4 +1,5 @@
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { tokenName } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -9,8 +10,9 @@ import {
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { getCurrentUserName } from 'src/app/helpers/localStorage';
 import { HeaderServiceService } from 'src/app/services/header-service/header-service.service';
+import { JwtTokenService } from 'src/app/services/jwt-token-service/jwt-token.service';
 import { ThemeService } from 'src/app/services/theme-service/theme-service';
 import { UserService } from 'src/app/services/user-service/user.service';
 import { HeaderComponent } from '../header/header.component';
@@ -37,8 +39,10 @@ export class LoginComponent implements OnInit {
     private userService: UserService,
     private snackBar: MatSnackBar,
     private header: HeaderServiceService,
-    private theme: ThemeService
+    private theme: ThemeService,
+    private jwtService: JwtTokenService
   ) {
+    sessionStorage.clear();
     this.theme.update('dark-mode');
     this.userForm = this.fb.group({
       username: ['', [Validators.required]],
@@ -68,17 +72,20 @@ export class LoginComponent implements OnInit {
       .subscribe(
         (next) => {
           this.header.changeIsLoggedIn((this.isLoggedIn = true));
-          localStorage.clear();
-          localStorage.setItem(
-            'loggedInUser',
-            JSON.stringify({
-              name: next.username,
-              id: next.id,
-              token: next.token,
-            })
-          );
-          this.router.navigate(['projects']);
+          let token = JSON.stringify(next.body);
+          token = token.substring(10);
+          token = token.slice(0, -2);
+          this.jwtService.saveJwtToken(token);
           this.isLoading = false;
+          this.userService
+            .getUserByName(this.username?.value)
+            .subscribe((res) => {
+              localStorage.setItem('userID', String(res.id));
+              localStorage.setItem('userName', this.username?.value);
+              localStorage.setItem('token', token);
+              this.header.changeIsLoggedInUser(this.username?.value);
+            });
+          this.router.navigate(['projects']);
         },
         (err: HttpErrorResponse) => {
           this.snackBar.open('Sikertelen bejelentkezés', '', {
@@ -88,8 +95,6 @@ export class LoginComponent implements OnInit {
         },
         () => (this.isLoading = false)
       );
-    this.router.navigate(['projects']); //ki kell majd ezt venni!
-    this.header.changeIsLoggedIn((this.isLoggedIn = true));
   }
 
   getUsernameMessage() {

@@ -10,6 +10,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
 import { DialogData } from 'src/app/helpers/dialog';
+import { getCurrentProjectID } from 'src/app/helpers/localStorage';
 import { CreateListService } from 'src/app/services/create-list/create-list.service';
 import { ListServiceService } from 'src/app/services/list-service/list-service.service';
 
@@ -43,14 +44,16 @@ export class CreateListDialogComponent implements OnInit {
     )
       return;
     this.isLoading = true;
+    var projectID = getCurrentProjectID();
     this.listService
       .createList({
-        listPosition: this.data.currentListsLength + 1,
+        projectId: projectID,
+        position: this.data.currentListsLength,
         listName: this.listNameCtrl?.value.trim(),
       })
       .subscribe(
         (next) => {
-          this.listValueService.myMethod(this.listNameCtrl?.value.trim());
+          //this.listValueService.myMethod(this.listNameCtrl?.value.trim());
           this.snackBar.open('A lista létrehozása sikeres!', '', {
             duration: 2000,
           });

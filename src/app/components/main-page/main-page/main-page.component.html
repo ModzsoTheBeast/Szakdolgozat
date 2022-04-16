@@ -6,64 +6,63 @@
   <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
   <h3 style="color: #d9b08c">Listák és kártyák betöltése ...</h3>
 </div>
-<div
-  *ngIf="!loading"
-  cdkDropListGroup
-  style="height: 80%"
-  class="wrapper parent"
-  #elemt
-  cdkDropList
-  cdkDropListOrientation="horizontal"
-  class="example-list"
-  (cdkDropListDropped)="drop($event)"
->
-  <!-- (mousedown)="startDragging($event, false, elemt)"
-  (mouseup)="stopDragging($event, false)"
-  (mouseleave)="stopDragging($event, false)"
-  (mousemove)="moveEvent($event, elemt)" -->
-  <div class="child" *ngFor="let list of lists">
-    <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
-    <app-task-section
-      class="example-box"
-      cdkDrag
-      [title]="list.listName"
-      [_tasks]="list.tasks"
-    ></app-task-section>
+<div>
+  <div
+    *ngIf="!loading"
+    cdkDropListGroup
+    style="height: 80%"
+    class="wrapper parent"
+    #elemt
+    (mousedown)="startDragging($event, false, elemt)"
+    (mouseup)="stopDragging($event, false)"
+    (mouseleave)="stopDragging($event, false)"
+    (mousemove)="moveEvent($event, elemt)"
+  >
+    <div class="child" *ngFor="let list of lists">
+      <app-task-section
+        class="example-box"
+        [listsLength]="lists.length"
+        [listID]="list.listId"
+        [listPosition]="list.listPosition"
+        [title]="list.listName"
+        [_tasks]="list.tasks"
+      ></app-task-section>
+    </div>
+    <div *ngIf="listsLength; then thenBlock; else elseBlock"></div>
+    <ng-template #thenBlock>
+      <div style="margin-top: 36px">
+        <button
+          mat-fab
+          color="primary"
+          (click)="createListDialog()"
+          matTooltip="Lista hozzáadása."
+          matTooltipPosition="below"
+          matTooltipHideDelay="500"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </ng-template>
+    <ng-template #elseBlock>
+      <div
+        style="
+          display: flex;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%);
+        "
+      >
+        <button
+          mat-fab
+          color="primary"
+          (click)="createListDialog()"
+          style="margin-right: 1em"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+        <h1 style="color: #116466">Hozz létre egy listát!</h1>
+      </div>
+    </ng-template>
   </div>
-  <div *ngIf="listsLength; then thenBlock; else elseBlock"></div>
-  <ng-template #thenBlock>
-    <div style="margin-top: 36px">
-      <button
-        mat-fab
-        color="primary"
-        (click)="createListDialog()"
-        matTooltip="Lista hozzáadása."
-        matTooltipPosition="below"
-        matTooltipHideDelay="500"
-      >
-        <mat-icon>add</mat-icon>
-      </button>
-    </div>
-  </ng-template>
-  <ng-template #elseBlock>
-    <div
-      style="
-        display: flex;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%);
-      "
-    >
-      <button
-        mat-fab
-        color="primary"
-        (click)="createListDialog()"
-        style="margin-right: 1em"
-      >
-        <mat-icon>add</mat-icon>
-      </button>
-      <h1 style="color: #116466">Hozz létre egy listát!</h1>
-    </div>
-  </ng-template>
 </div>

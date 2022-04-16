@@ -1,11 +1,15 @@
 export function getCurrentUserID(): number {
-  var user = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
-  return user.id;
+  var suserid: string = '';
+  if (localStorage.getItem('userID')) {
+    suserid = localStorage.getItem('userID') as string;
+  }
+  var userID: number = Number(suserid);
+  return userID;
 }
 
 export function getCurrentUserName(): string {
-  var user = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
-  return user.name;
+  var username = JSON.parse(localStorage.getItem('userName') || '{}');
+  return username;
 }
 
 export function getCurrentProjectID(): number {

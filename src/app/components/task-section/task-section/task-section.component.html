@@ -1,18 +1,40 @@
 <mat-card class="example-container">
+  <button
+    [hidden]="isListFirst"
+    class="position-absolute top-0 start-0"
+    mat-icon-button
+    matTooltip="Lista mozgatása balra"
+    matTooltipPosition="below"
+    (click)="moveListToLeft()"
+  >
+    <mat-icon color="accent">keyboard_arrow_left</mat-icon>
+  </button>
   <h5 style="text-transform: uppercase; text-align: center">
     {{ title }} - {{ tasks?.length ? tasks.length : 0 }}
   </h5>
+  <button
+    [hidden]="isListLast"
+    class="position-absolute top-0 end-0"
+    mat-icon-button
+    matTooltip="Lista mozgatása jobbra"
+    matTooltipPosition="below"
+    (click)="moveListToRight()"
+  >
+    <mat-icon color="accent">keyboard_arrow_right</mat-icon>
+  </button>
   <div
+    #fasz
     cdkDropList
     [cdkDropListData]="tasks"
+    [cdkDropListAutoScrollStep]="listid"
     class="example-list"
     (cdkDropListDropped)="drop($event)"
   >
     <div *ngFor="let taskData of tasks">
       <app-task
-        [taskID]="taskData.id"
-        [taskName]="taskData.name"
-        [taskDesc]="taskData.desc"
+        [taskID]="taskData.taskId"
+        [taskName]="taskData.taskName"
+        [taskDesc]="taskData.taskDescription"
       ></app-task>
     </div>
   </div>
@@ -36,6 +58,7 @@
       </mat-form-field>
       <div style="width: 100%"></div>
       <button
+        type="button"
         mat-icon-button
         [disabled]="createTaskForm.invalid"
         (click)="createTaskAction()"

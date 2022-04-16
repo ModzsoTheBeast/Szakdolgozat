@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { CreteListObj, ListDTO } from 'src/app/DTOs/ListDTOs';
+import { CreteListObj, ListDTO, MoveDTO } from 'src/app/DTOs/ListDTOs';
 import { environment } from 'src/environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -9,30 +9,47 @@ import { HttpClient } from '@angular/common/http';
 export class ListServiceService {
   constructor(private http: HttpClient) {}
 
-  createList(list: CreteListObj) {
-    return this.http.post<CreteListObj>(
-      `${environment.apiUrl}/api/list/create`,
-      list
+  moveListToLeft(move: MoveDTO) {
+    return this.http.post<MoveDTO>(
+      `${environment.apiUrl}/api/list/moveLeft`,
+      move
     );
+  }
+
+  moveListToRight(move: MoveDTO) {
+    return this.http.post<MoveDTO>(
+      `${environment.apiUrl}/api/list/moveRight`,
+      move
+    );
+  }
+
+  createList(list: CreteListObj) {
+    return this.http.post<CreteListObj>(`${environment.apiUrl}/api/list`, list);
   }
 
   getLists(projectID: number) {
     return this.http.get<ListDTO[]>(
-      `${environment.apiUrl}/api/lists/${projectID}`
+      `${environment.apiUrl}/api/list/findByProject/${projectID}`
     );
   }
 
   moveList(moveListData: MoveListDataObj) {
-    return this.http.post<MoveListDataObj>(
-      `${environment.apiUrl}/api/list/create`,
-      moveListData
-    );
+    return this.http
+      .post<MoveListDataObj>(
+        `${environment.apiUrl}/api/list/move`,
+        moveListData
+      )
+      .subscribe(
+        () => {},
+        (error: HttpErrorResponse) => {
+          console.log(error);
+        }
+      );
   }
 }
 
 export class MoveListDataObj {
-  userid: number;
-  projectid: number;
-  fromPosition: number;
-  toPosition: number;
+  projectId: number;
+  startPosition: number;
+  endPosition: number;
 }

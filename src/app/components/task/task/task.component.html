@@ -6,12 +6,12 @@
     (closed)="panelOpenState = false"
   >
     <mat-expansion-panel-header class="example-box">
-      <mat-panel-title> {{ taskName }}</mat-panel-title>
+      <mat-panel-title> {{ name }}</mat-panel-title>
     </mat-expansion-panel-header>
     <mat-panel-description style="height: auto; vertical-align: middle">
       <div style="width: 100%">
         <p style="float: left; width: 80%">
-          {{ taskDesc }}
+          {{ this.taskDesc }}
         </p>
         <button
           mat-icon-button

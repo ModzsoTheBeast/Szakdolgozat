@@ -5,6 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { DialogData } from 'src/app/helpers/dialog';
+import { getCurrentUserID } from 'src/app/helpers/localStorage';
 import { HeaderServiceService } from 'src/app/services/header-service/header-service.service';
 import { UserService } from 'src/app/services/user-service/user.service';
 
@@ -57,8 +58,8 @@ export class UserUpdateDialogComponent implements OnInit {
 
   async onSubmit() {
     this.isLoading = true;
-    var user = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
-    var userID = user.id;
+    var user = getCurrentUserID();
+
     this.userService
       .userUpdate(
         {
@@ -66,7 +67,7 @@ export class UserUpdateDialogComponent implements OnInit {
           password: this.password1?.value,
           userEmail: this.email?.value,
         },
-        userID
+        user
       )
       .subscribe(
         (next) => {

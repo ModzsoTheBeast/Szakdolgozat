@@ -1,10 +1,15 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { contributorsDTO } from 'src/app/DTOs/ContributorDTO';
 import { environment } from 'src/environments/environment';
-import { UserDTO, UserLoginDTO, UserUpdateDTO } from '../../DTOs/UserDTO';
+import {
+  UserDTO,
+  UserIDDTO,
+  UserLoginDTO,
+  UserUpdateDTO,
+} from '../../DTOs/UserDTO';
 import { JwtTokenService } from '../jwt-token-service/jwt-token.service';
 import { HttpHeaders } from '@angular/common/http';
 export interface AuthenticationResponse {
@@ -24,6 +29,12 @@ export class UserService {
       JSON.parse(localStorage.getItem('loggedInUser') || '{}')
     );
     this.currentUser = this.currentUserSubject.asObservable();
+  }
+
+  getUserByName(username: string) {
+    return this.http.get<UserIDDTO>(
+      `${environment.apiUrl}/api/users/${username}`
+    );
   }
 
   getAllEmails(projectID: number) {
@@ -50,15 +61,16 @@ export class UserService {
         'Content-Type',
         'application/x-www-form-urlencoded'
       ),
+      observe: 'response' as 'response',
     };
-    return this.http.post<UserLoginDTO>(
+    return this.http.post(
       `${environment.apiUrl}/api/users/login`,
       body,
       options
     );
   }
 
-  userUpdate(user: UserUpdateDTO, userId: string) {
+  userUpdate(user: UserUpdateDTO, userId: number) {
     return this.http.put<UserUpdateDTO>(
       `${environment.apiUrl}/api/user/update/${userId}`,
       user

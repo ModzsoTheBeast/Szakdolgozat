@@ -1,12 +1,13 @@
 import { taskDTO } from './TaskDTO';
 
 export interface CreteListObj {
-  listPosition: number;
+  projectId: number;
+  position: number;
   listName: string;
 }
 
 export interface ListDTO {
-  id?: number;
+  listId?: number;
   listPosition?: number;
   listName: string;
   tasks: taskDTO[];
@@ -14,5 +15,10 @@ export interface ListDTO {
 
 export interface ListsDataObj {
   listName: string;
-  listTasksNumber: number;
+  taskNumber: number;
+}
+
+export interface MoveDTO {
+  projectId: number;
+  listPosition: number;
 }

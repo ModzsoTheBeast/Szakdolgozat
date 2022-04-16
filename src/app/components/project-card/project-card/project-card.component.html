@@ -4,8 +4,18 @@
       <mat-toolbar
         color="primary"
         style="align-items: center; justify-content: center"
-        >{{ projectName }}</mat-toolbar
-      >
+        >{{ projectName }}
+        <button
+          class="position-absolute top-0 end-0"
+          mat-icon-button
+          (click)="deleteProject()"
+          matTooltip="Projekt törlése"
+          matTooltipPosition="right"
+          style="vertical-align: middle"
+        >
+          <mat-icon color="warn">delete_forever</mat-icon>
+        </button>
+      </mat-toolbar>
       <canvas
         *ngIf="canvas"
         style="margin-bottom: 2em; margin-top: 2em"

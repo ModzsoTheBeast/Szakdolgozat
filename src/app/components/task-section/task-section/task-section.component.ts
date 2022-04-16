@@ -3,18 +3,22 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ListDTO, MoveDTO } from 'src/app/DTOs/ListDTOs';
 import {
   getCurrentProjectID,
   getCurrentUserID,
 } from 'src/app/helpers/localStorage';
+import { failResponse } from 'src/app/helpers/snack';
+import { ListServiceService } from 'src/app/services/list-service/list-service.service';
 import {
   MoveTaskDataBetweenTasksObj,
   MoveTaskDataObj,
   TaskServiceService,
 } from 'src/app/services/task-service/task-service.service';
-import { taskDTO } from '../../../DTOs/TaskDTO';
+import { createTaskDTO, taskDTO } from '../../../DTOs/TaskDTO';
 @Component({
   selector: 'app-task-section',
   templateUrl: './task-section.component.html',
@@ -24,34 +28,74 @@ export class TaskSectionComponent implements OnInit {
   @Input() listID: number;
   @Input() title: string;
   @Input() _tasks: taskDTO[];
+  @Input() listsLength: number;
+  @Input() listPosition: number;
 
   createTaskForm: FormGroup;
   tasks: any[];
   createTaskBool: boolean = false;
+  listid: number;
+  lists: any[];
+  isListFirst: Boolean;
+  isListLast: Boolean;
 
   constructor(
     private formBuilder: FormBuilder,
-    private taskService: TaskServiceService
+    private taskService: TaskServiceService,
+    private listService: ListServiceService
   ) {
     this.createListForm();
-    //TODO:getTasksByListId();
   }
 
   ngOnInit() {
     this.tasks = this._tasks;
-    console.log(this.title);
-    console.log(this._tasks);
+    this.listid = this.listID;
+    console.log(this.listsLength);
+    this.isListLast = this.listPosition == this.listsLength - 1 ? true : false;
+    this.isListFirst = this.listPosition == 0 ? true : false;
+    console.log(this.isListLast);
+    console.log(this.isListFirst);
+  }
+
+  ngOnDestroy() {
+    this.tasks = [];
+    let asd = document.getElementById('fasz')?.remove();
+  }
+
+  moveListToLeft() {
+    let position: MoveDTO = {
+      listPosition: this.listPosition,
+      projectId: getCurrentProjectID(),
+    };
+    this.listService.moveListToLeft(position).subscribe(
+      (res) => {},
+      (error: HttpErrorResponse) => {}
+    );
+  }
+
+  moveListToRight() {
+    let position: MoveDTO = {
+      listPosition: this.listPosition,
+      projectId: getCurrentProjectID(),
+    };
+    this.listService.moveListToRight(position).subscribe(
+      (res) => {},
+      (error: HttpErrorResponse) => {
+        failResponse('Lista mozgatása sikertelen volt :/');
+      }
+    );
   }
 
   createTaskAction() {
-    var task: taskDTO = {
-      taskPosition: this.tasks.length + 1,
-      name: this.taskNameCtrl?.value.trim(),
-      desc: '',
-      done: false,
+    var task: createTaskDTO = {
+      positionInList: this.tasks.length,
+      taskName: this.taskNameCtrl?.value.trim(),
+      listId: this.listid,
     };
-    this.tasks.push(task);
-    this.taskService.createNewTask(task, this.listID);
+    this.taskService.createNewTask(task).subscribe((res) => {
+      console.log(res);
+      this.tasks.push(res);
+    });
     this.createTaskBool = false;
     this.createTaskForm.reset();
   }
@@ -79,11 +123,9 @@ export class TaskSectionComponent implements OnInit {
       );
       var listID = Number(event.container.id.substring(14));
       var obj1: MoveTaskDataObj = {
-        userid: getCurrentUserID(),
-        projectid: getCurrentProjectID(),
-        listid: listID,
-        fromPosition: event.previousIndex,
-        toPosition: event.currentIndex,
+        listId: this.listid,
+        startPosition: event.previousIndex,
+        endPosition: event.currentIndex,
       };
       try {
         this.taskService.moveTask(obj1).subscribe();
@@ -101,13 +143,14 @@ export class TaskSectionComponent implements OnInit {
       var toListPosition = Number(event.container.id.substring(14));
       var fromListPosition = Number(event.previousContainer.id.substring(14));
       var obj: MoveTaskDataBetweenTasksObj = {
-        userid: getCurrentUserID(),
-        projectid: getCurrentProjectID(),
-        fromPosition: event.previousIndex,
-        toPosition: event.currentIndex,
-        fromlistposition: fromListPosition,
-        tolistposition: toListPosition,
+        startTaskPosition: event.previousIndex,
+        endTaskPosition: event.currentIndex,
+        startListId: event.previousContainer.autoScrollStep as number,
+        endListId: event.container.autoScrollStep as number,
+        startListLength: event.previousContainer.data.length,
+        endListLength: event.container.data.length,
       };
+      console.log(obj);
       try {
         this.taskService.moveTaskDataBetweenTasks(obj).subscribe();
       } catch (e) {

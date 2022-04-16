@@ -3,11 +3,18 @@ import { contributorsDTO } from './ContributorDTO';
 import { taskListDTO } from './TaskListDTO';
 
 export interface taskDTO {
-  id?: number;
+  taskId?: number;
   taskPosition?: number;
-  name: string;
-  desc: string;
+  TaskName: string;
+  taskDescription: string;
   done: boolean;
+}
+
+export interface createTaskDTO {
+  taskId?: number;
+  positionInList?: number;
+  taskName: string;
+  listId: number;
 }
 
 export interface taskDetailDTO {

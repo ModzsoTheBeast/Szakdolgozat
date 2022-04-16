@@ -1,13 +1,13 @@
 import { ListsDataObj } from './ListDTOs';
 
 export interface ProjectsObj {
-  projectID: number;
+  projectId: number;
   projectName: string;
-  listsData: ListsDataObj[];
+  lists: ListsDataObj[];
 }
 
 export interface CreateProjectDTO {
-  projectID?: number;
-  userID: number;
+  projectId?: number;
+  userId: number;
   projectName: string;
 }

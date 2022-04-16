@@ -16,6 +16,10 @@ import {
 } from '../../../services/list-service/list-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {
+  getCurrentProjectID,
+  getCurrentUserID,
+} from 'src/app/helpers/localStorage';
 
 @Component({
   selector: 'app-main-page',
@@ -36,6 +40,7 @@ export class MainPageComponent implements OnInit {
   listNameSrc: Subject<string>;
   loading: Boolean;
   listsLength: Boolean = false;
+  /*
   dumyData: ListDTO[] = [
     {
       id: 1,
@@ -115,7 +120,7 @@ export class MainPageComponent implements OnInit {
       tasks: [],
     },
   ];
-
+*/
   lists: any[];
   constructor(
     public dialog: MatDialog,
@@ -123,30 +128,34 @@ export class MainPageComponent implements OnInit {
     private createListService: CreateListService,
     private snackBar: MatSnackBar
   ) {
-    this.createListService.myMethod$.subscribe((data) => {
-      this.title = data;
-      var lista: ListDTO = {
-        listName: this.title,
-        tasks: [],
-      };
-      this.lists.push(lista);
-      this.listsLength = true;
-    });
+    // this.createListService.myMethod$.subscribe((data) => {
+    //   this.title = data;
+    //   var lista: ListDTO = {
+    //     listName: this.title,
+    //     tasks: [],
+    //   };
+    //   this.lists.push(lista);
+    //   this.listsLength = true;
+    // });
   }
 
   ngOnInit() {
     this.loading = true;
-    var pID = JSON.parse(localStorage.getItem('current_project') || '{}');
-    this.projectID = pID.id;
-    this.userID = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
+    var pID = getCurrentProjectID();
+    this.projectID = pID;
+    this.userID = getCurrentUserID();
+    this.lists = [];
     this.listservice.getLists(this.projectID).subscribe(
       (res) => {
+        console.log(res);
+
         this.lists = res;
         this.loading = false;
-        this.listsLength = true;
+        if ((res = [] || res.length == 0)) this.listsLength = false;
+        else this.listsLength = true;
       },
       (error: HttpErrorResponse) => {
-        this.lists = this.dumyData;
+        //this.lists = this.dumyData;
         this.snackBar.open('A listák betöltése nem sikerült!', '', {
           duration: 2000,
         });
@@ -154,6 +163,12 @@ export class MainPageComponent implements OnInit {
       }
     );
   }
+
+  ngOnDestroy() {
+    this.lists = [];
+    document.getElementById('elemt')?.remove();
+  }
+
   async createListDialog() {
     const dialogConfig = new MatDialogConfig();
 
@@ -173,6 +188,24 @@ export class MainPageComponent implements OnInit {
       currentListsLength: length,
     };
     const dialogRef = this.dialog.open(CreateListDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(() => {
+      this.lists = [];
+      this.loading = true;
+      this.listservice.getLists(this.projectID).subscribe(
+        (res) => {
+          this.lists = res;
+          this.loading = false;
+          this.listsLength = true;
+        },
+        (error: HttpErrorResponse) => {
+          //this.lists = this.dumyData;
+          this.snackBar.open('A listák betöltése nem sikerült!', '', {
+            duration: 2000,
+          });
+          this.loading = false;
+        }
+      );
+    });
   }
 
   startDragging(
@@ -180,10 +213,11 @@ export class MainPageComponent implements OnInit {
     flag: any,
     el: { offsetLeft: number; scrollLeft: any }
   ) {
-    setTimeout;
     this.mouseDown = true;
-    this.startX = e.pageX - el.offsetLeft;
-    this.scrollLeft = el.scrollLeft;
+    setTimeout(() => {
+      this.startX = e.pageX - el.offsetLeft;
+      this.scrollLeft = el.scrollLeft;
+    }, 1000);
   }
   stopDragging(e: any, flag: any) {
     this.mouseDown = false;
@@ -200,19 +234,18 @@ export class MainPageComponent implements OnInit {
     const scroll = x - this.startX;
     el.scrollLeft = this.scrollLeft - scroll;
   }
-  drop(event: CdkDragDrop<ListDTO[]>) {
-    moveItemInArray(this.lists, event.previousIndex, event.currentIndex);
-    var obj: MoveListDataObj = {
-      userid: this.userID,
-      projectid: this.projectID,
-      fromPosition: event.previousIndex,
-      toPosition: event.currentIndex,
-    };
-    try {
-      this.listservice.moveList(obj).subscribe();
-    } catch (e) {
-      console.log(e);
-    }
-    console.log(event);
-  }
+  // drop(event: CdkDragDrop<ListDTO[]>) {
+  //   moveItemInArray(this.lists, event.previousIndex, event.currentIndex);
+  //   var obj: MoveListDataObj = {
+  //     projectId: this.projectID,
+  //     startPosition: event.previousIndex,
+  //     endPosition: event.currentIndex,
+  //   };
+  //   try {
+  //     this.listservice.moveList(obj);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  //   console.log(event);
+  // }
 }

@@ -15,9 +15,9 @@
 <div *ngIf="lengthIsOne; else elseBlock">
   <app-project-card
     *ngFor="let project of projects"
-    [projectID]="project.projectID"
+    [projectID]="project.projectId"
     [projectName]="project.projectName"
-    [listsData]="project.listsData"
+    [listsData]="project.lists"
   ></app-project-card>
 </div>
 <ng-template #elseBlock>
@@ -41,16 +41,16 @@
     }}</ng-template>
     <mat-step [label]="project.projectName" *ngFor="let project of projects">
       <app-project-card
-        [projectID]="project.projectID"
+        [projectID]="project.projectId"
         [projectName]="project.projectName"
-        [listsData]="project.listsData"
+        [listsData]="project.lists"
       ></app-project-card>
     </mat-step>
   </mat-stepper>
 </ng-template>
-<div class="addProjectBtn" *ngIf="!loading">
+<div class="addProjectBtn" *ngIf="!loading && !maxProjectNumber">
   <h1
-    *ngIf="!projects"
+    *ngIf="projects.length == 0"
     style="
       display: block;
       width: 100%;

@@ -17,14 +17,21 @@ export class ProjectService {
 
   getAllProjectsByID(userID: number) {
     return this.http.get<ProjectsObj[]>(
-      `${environment.apiUrl}/api/projects/${userID}`
+      `${environment.apiUrl}/api/project/findAllByUserId/${userID}`
     );
   }
 
   createProjects(project: CreateProjectDTO) {
     return this.http.post<CreateProjectDTO>(
-      `${environment.apiUrl}/api/projects`,
+      `${environment.apiUrl}/api/project`,
       project
+    );
+  }
+
+  deleteProject(projectid: number) {
+    return this.http.post(
+      `${environment.apiUrl}/api/project/delete/${projectid}`,
+      null
     );
   }
 
