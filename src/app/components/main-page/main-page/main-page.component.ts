@@ -1,25 +1,16 @@
-import {
-  CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem,
-} from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
-import { ListDTO } from 'src/app/DTOs/ListDTOs';
 import { CreateListService } from 'src/app/services/create-list/create-list.service';
-import Swal from 'sweetalert2';
 import { CreateListDialogComponent } from '../../dialogs/create-list-dialog/create-list-dialog/create-list-dialog.component';
-import {
-  ListServiceService,
-  MoveListDataObj,
-} from '../../../services/list-service/list-service.service';
+import { ListServiceService } from '../../../services/list-service/list-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   getCurrentProjectID,
   getCurrentUserID,
 } from 'src/app/helpers/localStorage';
+import { MoveService } from 'src/app/services/move-service/move.service';
 
 @Component({
   selector: 'app-main-page',
@@ -122,12 +113,43 @@ export class MainPageComponent implements OnInit {
   ];
 */
   lists: any[];
+  moving: boolean = false;
   constructor(
     public dialog: MatDialog,
     private listservice: ListServiceService,
     private createListService: CreateListService,
-    private snackBar: MatSnackBar
-  ) {}
+    private snackBar: MatSnackBar,
+    private moveService: MoveService
+  ) {
+    this.moveService.moveList$.subscribe((res) => {
+      if (res) this.moving = true;
+
+      if (this.moving) {
+        this.loading = true;
+        var pID = getCurrentProjectID();
+        this.projectID = pID;
+        this.userID = getCurrentUserID();
+        this.lists = [];
+        this.listservice.getLists(this.projectID).subscribe(
+          (res) => {
+            console.log(res);
+
+            this.lists = res;
+            this.loading = false;
+            if ((res = [] || res.length == 0)) this.listsLength = false;
+            else this.listsLength = true;
+          },
+          (error: HttpErrorResponse) => {
+            //this.lists = this.dumyData;
+            this.snackBar.open('A listák betöltése nem sikerült!', '', {
+              duration: 2000,
+            });
+            this.loading = false;
+          }
+        );
+      }
+    });
+  }
 
   ngOnInit() {
     this.loading = true;

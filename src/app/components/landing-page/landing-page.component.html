@@ -12,7 +12,7 @@
   <h3 style="color: #d9b08c">Projektek betöltése ...</h3>
 </div>
 
-<div *ngIf="lengthIsOne; else elseBlock">
+<div *ngIf="lengthIsOne && !loading; else elseBlock">
   <app-project-card
     *ngFor="let project of projects"
     [projectID]="project.projectId"
@@ -44,7 +44,9 @@
         [projectID]="project.projectId"
         [projectName]="project.projectName"
         [listsData]="project.lists"
-      ></app-project-card>
+      >
+        ></app-project-card
+      >
     </mat-step>
   </mat-stepper>
 </ng-template>

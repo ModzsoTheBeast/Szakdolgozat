@@ -1,5 +1,14 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
-import { taskListDTO, taskListItemDTO } from 'src/app/DTOs/TaskListDTO';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  createTaskListItemDTO,
+  taskListDTO,
+  taskListItemDTO,
+  updateTaskListItemDTO,
+} from 'src/app/DTOs/TaskListDTO';
+import { snack } from 'src/app/helpers/snack';
+import { DeleteService } from 'src/app/services/delete-service/delete.service';
 import { TaskServiceService } from 'src/app/services/task-service/task-service.service';
 
 @Component({
@@ -10,9 +19,17 @@ import { TaskServiceService } from 'src/app/services/task-service/task-service.s
 export class TaskListComponent implements OnInit {
   @Input() _data: taskListDTO;
   listData: taskListDTO;
-  constructor(private taskService: TaskServiceService) {}
+  isFormEnabled: boolean = false;
+  taskListItemForm: FormGroup;
+  constructor(
+    private taskService: TaskServiceService,
+    private snack: snack,
+    private formBuilder: FormBuilder,
+    private deleteService: DeleteService
+  ) {}
 
   ngOnInit(): void {
+    if (!this._data.taskListItems) this._data.taskListItems = [];
     this.listData = this._data;
   }
 
@@ -20,48 +37,111 @@ export class TaskListComponent implements OnInit {
 
   updateAllComplete() {
     this.allComplete =
-      this.listData.items != null && this.listData.items.every((t) => t.isDone);
-    this.taskService.updateTaskListByID(
-      this.listData.id as number,
-      this.listData
+      this.listData.taskListItems != null &&
+      this.listData.taskListItems.every((t) => t.isDone);
+    let items: taskListItemDTO[] = [];
+    this.listData.taskListItems.forEach((item) => {
+      items.push(item);
+    });
+    let data: updateTaskListItemDTO = {
+      taskListItems: items,
+      taskListName: this.listData.taskListName,
+      taskListId: this.listData.taskListId as number,
+    };
+    this.taskService.updateTaskListByID(data).subscribe(
+      (res) => {},
+      (error: HttpErrorResponse) => {}
     );
   }
 
   someComplete(): boolean {
-    if (this.listData.items == null) {
+    if (this.listData.taskListItems == null) {
       return false;
     }
-    this.listData.items.filter((t) => t.isDone);
-    this.taskService.updateTaskListByID(
-      this.listData.id as number,
-      this.listData
-    );
+    this.listData.taskListItems.filter((t) => t.isDone);
     return (
-      this.listData.items.filter((t) => t.isDone).length > 0 &&
+      this.listData.taskListItems.filter((t) => t.isDone).length > 0 &&
       !this.allComplete
     );
   }
 
   setAll(completed: boolean) {
     this.allComplete = completed;
-    if (this.listData.items == null) {
+    if (this.listData.taskListItems == null) {
       return;
     }
-    this.listData.items.forEach((t) => (t.isDone = completed));
-    this.taskService.updateTaskListByID(
-      this.listData.id as number,
-      this.listData
+    this.listData.taskListItems.forEach((t) => (t.isDone = completed));
+    let items: taskListItemDTO[] = [];
+    this.listData.taskListItems.forEach((item) => {
+      items.push(item);
+    });
+    let data: updateTaskListItemDTO = {
+      taskListItems: items,
+      taskListName: this.listData.taskListName,
+      taskListId: this.listData.taskListId as number,
+    };
+    this.taskService.updateTaskListByID(data).subscribe(
+      (res) => {},
+      (error: HttpErrorResponse) => {}
     );
   }
 
   createNewItem() {
-    let newItem: taskListItemDTO = {
-      name: '',
+    let newItem: createTaskListItemDTO = {
+      itemName: this.taskListItemName?.value,
       isDone: false,
+      taskListId: this.listData.taskListId as number,
     };
-    this.taskService.updateTaskListByID(
-      this.listData.id as number,
-      this.listData
+    this.taskService.createTaskListItem(newItem).subscribe(
+      (res) => {
+        let item: taskListItemDTO = {
+          taskListItemId: res.id,
+          taskListItemName: res.itemName,
+          isDone: res.isDone,
+        };
+        this.listData.taskListItems.push(item);
+        console.log(this.listData);
+      },
+      (error: HttpErrorResponse) => {
+        this.snack.response('A lista elem létrehozása sikertelen!', 'close', 2);
+      }
     );
+    this.isFormEnabled = false;
+  }
+
+  changeToInput() {
+    this.createTaskListItemForm();
+    this.isFormEnabled = !this.isFormEnabled;
+  }
+
+  createTaskListItemForm() {
+    this.taskListItemForm = this.formBuilder.group({
+      taskListItemName: ['', Validators.required],
+    });
+  }
+
+  get taskListItemName() {
+    return this.taskListItemForm.get('taskListItemName');
+  }
+
+  deleteTaskList() {
+    this.taskService
+      .deleteTaskList(this.listData.taskListId as number)
+      .subscribe(
+        (res) => {
+          this.deleteService.deleteTaskList(this.listData.taskListId as number);
+        },
+        (error: HttpErrorResponse) => {
+          switch (error.status) {
+            case 200:
+              this.deleteService.deleteTaskList(
+                this.listData.taskListId as number
+              );
+              break;
+            default:
+              break;
+          }
+        }
+      );
   }
 }

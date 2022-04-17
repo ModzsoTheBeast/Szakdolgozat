@@ -1,66 +1,136 @@
-<div *ngFor="let item of dummyData.taskLists">
-  <app-task-list [_data]="item"></app-task-list>
-</div>
-<mat-dialog-content>
-  <form [formGroup]="taskForm">
-    <mat-toolbar class="d-block">
-      <h3
-        *ngIf="!nameEdit"
-        (click)="nameEdit = !nameEdit"
-        style="cursor: pointer"
-      >
-        {{ data.taskName }}
-      </h3>
-      <mat-form-field *ngIf="nameEdit" formControlName="taskNameCtrl">
-        <mat-label>Kártya név</mat-label>
-        <input matInput inputType="text" [value]="data.taskName" required />
-        <mat-error
-          *ngIf="taskNameCtrl?.hasError('required') && taskNameCtrl?.touched"
+<mat-toolbar color="primary" style="margin-bottom: 1em">
+  <div style="display: flex; width: 100%">
+    <h1 style="align-self: center; font-size: 1.5em">
+      <strong>{{ taskData.taskName }}</strong>
+    </h1>
+
+    <button
+      mat-icon-button
+      color="accent"
+      mat-dialog-close
+      style="margin-left: auto"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>
+<mat-dialog-content style="background: #2c2c2c; height: 100%">
+  <div style="display: flex; height: 100%">
+    <div style="height: 100%; width: 69%; margin-right: auto">
+      <h5>Leírás</h5>
+      <p style="align-self: center; width: 100%">
+        {{ taskData.taskDescription }}
+      </p>
+      <mat-divider style="margin-bottom: 0.5em"></mat-divider>
+      <div style="display: flex; width: 100%">
+        <h5>Listák</h5>
+        <button
+          mat-mini-fab
+          (click)="creatingTaskList = !creatingTaskList"
+          style="margin-left: auto; margin-bottom: 0.5em"
         >
-          lol
-        </mat-error>
-      </mat-form-field>
-      <!-- <div style="width: 100%"></div> -->
-      <button
-        mat-icon-button
-        color="prymary"
-        mat-dialog-close
-        style="align-self: flex-end"
-      >
-        <mat-icon>close</mat-icon>
-      </button>
-    </mat-toolbar>
-    <div class="d-inline content" style="width: 70%; height: 100%">
-      <mat-card></mat-card>
+          <mat-icon color="primary">add</mat-icon>
+        </button>
+      </div>
+      <form *ngIf="creatingTaskList" [formGroup]="taskListForm">
+        <mat-form-field appearance="fill" style="width: 100%">
+          <mat-label>Lista név</mat-label>
+          <input
+            matInput
+            formControlName="taskListName"
+            #listName
+            maxlength="30"
+            type="text"
+            placeholder="Lista név.."
+            required
+          />
+          <button mat-icon-button matSuffix (click)="createNewTaskList()">
+            <mat-icon color="accent">playlist_add</mat-icon>
+          </button>
+          <mat-hint align="end">{{ listName.value.length }} / 30</mat-hint>
+        </mat-form-field>
+      </form>
+      <div *ngFor="let item of taskData.taskLists">
+        <app-task-list [_data]="item"></app-task-list>
+      </div>
+      <mat-divider style="margin-bottom: 0.5em"></mat-divider>
+      <div style="display: flex; width: 100%">
+        <h5 *ngIf="taskData.comments">Megjegyzések</h5>
+        <button
+          mat-mini-fab
+          (click)="creatingComment = !creatingComment"
+          style="margin-left: auto; margin-bottom: 0.5em"
+        >
+          <mat-icon color="primary">add</mat-icon>
+        </button>
+      </div>
+      <form *ngIf="creatingComment">
+        <mat-form-field appearance="fill" style="width: 100%">
+          <mat-label>Megjegyzés</mat-label>
+          <textarea
+            matInput
+            type="text"
+            placeholder="Ez egy komment.."
+            cdkTextareaAutosize
+            style="overflow: hidden"
+            required
+          ></textarea>
+          <mat-icon matSuffix>comment</mat-icon>
+        </mat-form-field>
+      </form>
+      <div *ngFor="let item of taskData.comments">
+        <app-task-comment
+          [_data]="item"
+          style="margin-bottom: 1em"
+        ></app-task-comment>
+      </div>
     </div>
-    <div class="d-inline sidenav" style="width: 30%; height: 100%">
-      <button mat-raised-button color="primary" (click)="deleteTask()">
+    <mat-divider [vertical]="true"></mat-divider>
+    <div style="width: 30%; height: 100%">
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="deleteTask()"
+        style="margin-bottom: 1em; width: 100%; margin-left: 1em"
+      >
         Kártya eltávolítása
       </button>
-      <button mat-raised-button color="primary" (click)="createTaskList()">
+      <button
+        mat-raised-button
+        color="primary"
+        style="margin-bottom: 1em; width: 100%; margin-left: 1em"
+      >
         Lista létrehozása
       </button>
     </div>
-  </form>
-  <mat-card class="d-block" style="margin-top: 10em">
-    <mat-card-title
-      >Shiba Inu
-      <button mat-icon-button color="accent" (click)="removeComment()">
-        <mat-icon>remove</mat-icon>
-      </button>
-    </mat-card-title>
-    <mat-card-subtitle>Dog Breed</mat-card-subtitle>
-    <mat-card-content>
-      <p>This card indeterminates progress bar.</p>
-    </mat-card-content>
-    <mat-card-actions>
-      <!-- <button mat-icon-button (click)="like()">
-        <mat-icon color="accent">thumb_up</mat-icon>
-      </button> -->
-    </mat-card-actions>
-  </mat-card>
-  <mat-dialog-actions align="middle">
-    <button mat-raised-button (click)="submit()" color="primary">Mentés</button>
-    <button mat-button mat-dialog-close>close</button>
-  </mat-dialog-actions>
+  </div>
 </mat-dialog-content>
+<mat-dialog-actions align="middle">
+  <button mat-raised-button (click)="submit()" color="primary">Mentés</button>
+  <button mat-button mat-dialog-close>close</button>
+</mat-dialog-actions>
+
+<!-- <form [formGroup]="taskForm">
+  <mat-form-field *ngIf="nameEdit" formControlName="taskNameCtrl">
+    <mat-label>Kártya név</mat-label>
+    <input matInput inputType="text" [value]="dummyData.name" required />
+    <mat-error
+    *ngIf="taskNameCtrl?.hasError('required') && taskNameCtrl?.touched"
+    >
+    Kötelező!
+  </mat-error>
+</mat-form-field>
+<div style="width: 100%"></div>
+
+<div class="d-inline content" style="width: 70%; height: 100%">
+  <mat-card></mat-card>
+</div>
+<div class="d-inline sidenav" style="width: 30%; height: 100%">
+  <button mat-raised-button color="primary" (click)="deleteTask()">
+    Kártya eltávolítása
+    </button>
+    <button mat-raised-button color="primary" (click)="createTaskList()">
+      Lista létrehozása
+    </button>
+  </div>
+</form> -->

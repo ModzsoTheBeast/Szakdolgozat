@@ -28,7 +28,9 @@
         [_tasks]="list.tasks"
       ></app-task-section>
     </div>
-    <div *ngIf="listsLength; then thenBlock; else elseBlock"></div>
+    <div
+      *ngIf="listsLength || lists.length != 0; then thenBlock; else elseBlock"
+    ></div>
     <ng-template #thenBlock>
       <div style="margin-top: 36px">
         <button

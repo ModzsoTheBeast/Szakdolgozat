@@ -1,1 +1,28 @@
-<p>task-comment works!</p>
+<mat-card class="d-block" style="margin-bottom: 1em; height: auto">
+  <mat-card-title style="display: flex">
+    <p
+      style="font-size: 0.8rem; color: lightgrey; margin: 0; align-self: center"
+    >
+      <strong>
+        {{ _data.createdBy }}
+      </strong>
+      - {{ _data.createdOn | date: "EEEE, MMMM d, y, h:mm:ss":"UTC" }}
+    </p>
+    <button
+      mat-icon-button
+      color="warn"
+      (click)="removeComment()"
+      style="margin-left: auto"
+    >
+      <mat-icon>delete_forever</mat-icon>
+    </button>
+  </mat-card-title>
+  <mat-card-content>
+    <h6>{{ _data.text }}</h6>
+  </mat-card-content>
+  <mat-card-actions>
+    <a *ngIf="_data.createdBy == user" href="" style="font-style: unset"
+      >szerkesztés</a
+    >
+  </mat-card-actions>
+</mat-card>

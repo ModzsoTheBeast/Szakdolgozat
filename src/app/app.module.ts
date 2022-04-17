@@ -31,6 +31,7 @@ import {
 import { EditContributorComponent } from './components/dialogs/edit-contributors-dialog/edit-contributor/edit-contributor.component';
 import { TaskCommentComponent } from './components/task/task-comment/task-comment/task-comment.component';
 import { TaskListComponent } from './components/task/task-list/task-list/task-list.component';
+import { snack } from './helpers/snack';
 
 @NgModule({
   declarations: [

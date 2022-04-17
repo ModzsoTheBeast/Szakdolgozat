@@ -5,11 +5,13 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { commentDTO } from 'src/app/DTOs/CommentDTO';
 import { contributorsDTO } from 'src/app/DTOs/ContributorDTO';
 import { taskDetailDTO } from 'src/app/DTOs/TaskDTO';
-import { taskListDTO } from 'src/app/DTOs/TaskListDTO';
+import { createTaskListDTO, taskListDTO } from 'src/app/DTOs/TaskListDTO';
 import {
   getCurrentUserID,
   getCurrentUserName,
 } from 'src/app/helpers/localStorage';
+import { snack } from 'src/app/helpers/snack';
+import { DeleteService } from 'src/app/services/delete-service/delete.service';
 import { TaskServiceService } from 'src/app/services/task-service/task-service.service';
 
 @Component({
@@ -18,77 +20,101 @@ import { TaskServiceService } from 'src/app/services/task-service/task-service.s
   styleUrls: ['./task-dialog.component.scss'],
 })
 export class TaskDialogComponent implements OnInit {
-  dummyData: taskDetailDTO = {
-    name: 'dummy name',
-    done: false,
-    contributors: [
-      {
-        id: 1,
-        name: 'laci',
-        role: 'dev',
-      },
-      {
-        id: 1,
-        name: 'erik',
-        role: 'dev',
-      },
-    ],
-    cretedBy: 'dummy',
-    createdOn: new Date(),
-    desc: 'asdadsadsasd assda sdads da ssa d',
-    comments: [
-      {
-        id: 1,
-        createdBy: 'dummy',
-        createdOn: new Date(),
-        text: 'asdasdasds',
-      },
-    ],
-    deadline: new Date(),
-    taskLists: [
-      {
-        id: 1,
-        name: 'list1',
-        items: [
-          { name: 'item 1', isDone: true },
-          { name: 'item 2', isDone: false },
-        ],
-      },
-    ],
-  };
+  // dummyData: taskDetailDTO = {
+  //   name: 'dummy name',
+  //   done: false,
+  //   contributors: [
+  //     {
+  //       id: 1,
+  //       name: 'laci',
+  //       role: 'dev',
+  //     },
+  //     {
+  //       id: 1,
+  //       name: 'erik',
+  //       role: 'dev',
+  //     },
+  //   ],
+  //   cretedBy: 'dummy',
+  //   createdOn: new Date(),
+  //   desc: 'asdadsadsasd assda sdads da ssa d',
+  //   comments: [
+  //     {
+  //       id: 1,
+  //       createdBy: 'dummy',
+  //       createdOn: new Date(),
+  //       text: 'asdasdasds',
+  //     },
+  //     {
+  //       id: 1,
+  //       createdBy: 'dummy',
+  //       createdOn: new Date(),
+  //       text: 'loololol',
+  //     },
+  //   ],
+  //   deadline: new Date(),
+  //   taskLists: [
+  //     {
+  //       id: 1,
+  //       name: 'list1',
+  //       items: [
+  //         { name: 'item 1', isDone: true },
+  //         { name: 'item 2', isDone: false },
+  //       ],
+  //     },
+  //   ],
+  // };
   taskForm: FormGroup;
   commentForm: FormGroup;
   taskListForm: FormGroup;
   taskData: taskDetailDTO;
-  contributors: contributorsDTO[];
-  comments: commentDTO[];
-  taskLists: taskListDTO[];
-  taskID: number;
+  taskid: number;
   nameEdit: Boolean = false;
+  creatingTaskList: Boolean = false;
+  creatingComment: Boolean = false;
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
     private formBuilder: FormBuilder,
-    private taskService: TaskServiceService
-  ) {}
+    private taskService: TaskServiceService,
+    private snack: snack,
+    private deleteService: DeleteService,
+    @Inject(MAT_DIALOG_DATA) public data: { taskID: number }
+  ) {
+    this.deleteService.deleteTaskList$.subscribe((res) => {
+      let index = this.taskData.taskLists.findIndex(
+        (x) => x.taskListId === res
+      );
+      if (index != -1) this.taskData.taskLists.splice(index, 1);
+    });
+  }
 
   ngOnInit(): void {
+    this.taskData = {
+      taskName: '',
+      isDone: true,
+      contributors: [],
+      createdOn: new Date(),
+      taskLists: [],
+      comments: [],
+    };
+    this.taskid = this.data.taskID;
+    console.log(this.taskid);
+
     this.createTaskForm();
     this.createCommentForm();
-    this.taskID = this.data.id;
-    this.taskService.getDetailedTaskDataByTaskID(this.taskID).subscribe(
+    this.createTaskListForm();
+    this.taskService.getDetailedTaskDataByTaskID(this.taskid).subscribe(
       (resoult) => {
         this.taskData = resoult;
+        console.log(resoult);
       },
       (error: HttpErrorResponse) => {
-        this.taskData = this.dummyData;
+        this.snack.response('Az adatok betöltése sikertelen!', 'close', 2);
       }
     );
-    this.contributors = this.taskData.contributors;
-    this.comments = this.taskData.comments as commentDTO[];
   }
 
   submit() {
-    console.log('asd ');
+    //this.taskService.updateTask()
   }
 
   createNewComment() {
@@ -97,24 +123,32 @@ export class TaskDialogComponent implements OnInit {
       createdBy: getCurrentUserName(),
       text: this.text?.value,
     };
-    this.taskService.createComment(newComment, this.taskID).subscribe(
+    this.taskService.createComment(newComment, this.taskid).subscribe(
       (resoult) => {
-        this.comments.push(resoult);
+        this.taskData.comments?.push(resoult);
       },
       (error: HttpErrorResponse) => {}
     );
   }
 
   createNewTaskList() {
-    let newTaskList: taskListDTO = {
-      name: this.taskListName?.value,
-      items: [],
+    let newTaskList: createTaskListDTO = {
+      taskId: this.taskid,
+      taskListName: this.taskListName?.value,
     };
-    this.taskService.createTaskList(newTaskList, this.taskID).subscribe(
+    this.taskService.createTaskList(newTaskList).subscribe(
       (resoult) => {
-        this.taskLists.push(resoult);
+        let newList: taskListDTO = {
+          taskListId: resoult.taskListId,
+          taskListName: resoult.taskListName,
+          taskListItems: [],
+        };
+        this.taskData.taskLists.push(newList);
+        this.creatingTaskList = false;
       },
-      (error: HttpErrorResponse) => {}
+      (error: HttpErrorResponse) => {
+        this.snack.response('A lista létrehozása sikertelen!', 'close', 2);
+      }
     );
   }
 
@@ -123,16 +157,14 @@ export class TaskDialogComponent implements OnInit {
 
   deleteTask() {}
 
-  createTaskList() {}
   removeTaskList() {}
   updateTaskListByID() {}
 
-  removeComment() {}
-  updateCommentByID() {}
-
   createTaskForm() {
     this.taskForm = this.formBuilder.group({
-      taskNameCtrl: [this.data.taskName, Validators.required],
+      taskNameCtrl: ['', Validators.required],
+      taskDescCtrl: ['', Validators.required],
+      lol: ['', Validators.required],
     });
   }
 
@@ -157,6 +189,6 @@ export class TaskDialogComponent implements OnInit {
   }
 
   get taskListName() {
-    return this.commentForm.get('taskListName');
+    return this.taskListForm.get('taskListName');
   }
 }

@@ -1,9 +1,14 @@
+import { Injectable } from '@angular/core';
 import {
-  MatSnackBar,
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
+  MatSnackBarModule,
+  MatSnackBar,
 } from '@angular/material/snack-bar';
 
+@Injectable({
+  providedIn: 'root',
+})
 export class snack {
   constructor(private snackBar: MatSnackBar) {}
   response(

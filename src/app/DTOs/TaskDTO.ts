@@ -18,12 +18,13 @@ export interface createTaskDTO {
 }
 
 export interface taskDetailDTO {
-  name: string;
-  desc?: string;
-  done: boolean;
+  taskId?: number;
+  taskName: string;
+  taskDescription?: string;
+  isDone: boolean;
   contributors: contributorsDTO[];
   comments?: commentDTO[];
-  cretedBy: string;
+  cretedBy?: string;
   createdOn: Date;
   deadline?: Date;
   taskLists: taskListDTO[];

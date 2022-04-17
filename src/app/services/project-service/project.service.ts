@@ -31,7 +31,7 @@ export class ProjectService {
   deleteProject(projectid: number) {
     return this.http.post(
       `${environment.apiUrl}/api/project/delete/${projectid}`,
-      null
+      projectid
     );
   }
 

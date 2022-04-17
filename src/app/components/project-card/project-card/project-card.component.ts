@@ -9,6 +9,7 @@ import {
   SingleDataSet,
 } from 'ng2-charts';
 import { ListsDataObj } from 'src/app/DTOs/ListDTOs';
+import { DeleteService } from 'src/app/services/delete-service/delete.service';
 import { HeaderServiceService } from 'src/app/services/header-service/header-service.service';
 import { ProjectService } from 'src/app/services/project-service/project.service';
 
@@ -40,7 +41,8 @@ export class ProjectCardComponent implements OnInit {
   constructor(
     private router: Router,
     private header: HeaderServiceService,
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    private deleteService: DeleteService
   ) {
     monkeyPatchChartJsTooltip();
     monkeyPatchChartJsLegend();
@@ -65,16 +67,20 @@ export class ProjectCardComponent implements OnInit {
     }
   }
 
-  deleteProject() {
-    this.projectService.deleteProject(this.projectID).subscribe(
-      () => {},
-      (error: HttpErrorResponse) => {}
-    );
-  }
-
   moveToProject() {
     this.header.changeOnMainPage((this.onMainPage = true));
     localStorage.setItem('current_project', JSON.stringify(this.projectID));
     this.router.navigate(['main']);
+  }
+
+  deleteProject() {
+    this.projectService.deleteProject(this.projectID).subscribe(
+      (res) => {
+        this.deleteService.deleteProject(true);
+      },
+      (error: HttpErrorResponse) => {
+        this.deleteService.deleteProject(true);
+      }
+    );
   }
 }

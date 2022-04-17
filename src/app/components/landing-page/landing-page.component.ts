@@ -1,6 +1,7 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { StepperOrientation } from '@angular/cdk/stepper';
 import { HttpErrorResponse } from '@angular/common/http';
+import { identifierModuleUrl } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -9,6 +10,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CreateProjectDTO, ProjectsObj } from 'src/app/DTOs/ProjectsDTOs';
 import { getCurrentUserID } from 'src/app/helpers/localStorage';
+import { DeleteService } from 'src/app/services/delete-service/delete.service';
 import { ProjectService } from 'src/app/services/project-service/project.service';
 import { CreateProjectDialogComponent } from '../dialogs/create-project-dialog/create-project-dialog/create-project-dialog.component';
 
@@ -105,12 +107,14 @@ export class LandingPageComponent implements OnInit {
   loading: Boolean = false;
   maxProjectNumber: Boolean = false;
   plength: number = 0;
+  shouldDelete: boolean = false;
   constructor(
     private router: Router,
     private breakpointObserver: BreakpointObserver,
     private projectService: ProjectService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private deleteService: DeleteService
   ) {
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
@@ -121,6 +125,7 @@ export class LandingPageComponent implements OnInit {
         userId: this.user,
         projectName: data,
       };
+      this.loading = true;
       this.projectService.createProjects(projectData).subscribe(
         (res) => {
           var asd: ProjectsObj = {
@@ -131,16 +136,33 @@ export class LandingPageComponent implements OnInit {
           this.projects.push(asd);
           this.lengthIsOne = this.projects.length == 1 ? true : false;
           this.plength = this.projects.length;
+          this.loading = false;
         },
         (error: HttpErrorResponse) => {
+          this.loading = false;
           this.snackBar.open('Nem sikerült létrehozni a projektet!', '', {
             duration: 2,
           });
         }
       );
     });
+
+    this.deleteService.deleteProject$.subscribe((res) => {
+      this.shouldDelete = res;
+
+      if (this.shouldDelete) {
+        this.projects = [];
+        this.reload();
+      }
+      this.shouldDelete = false;
+    });
   }
+
   ngOnInit(): void {
+    this.reload();
+  }
+
+  reload() {
     this.loading = true;
     setTimeout(() => {
       this.projects = [];

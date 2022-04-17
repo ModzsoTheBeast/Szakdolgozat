@@ -3,7 +3,13 @@ import { Injectable } from '@angular/core';
 import { commentDTO } from 'src/app/DTOs/CommentDTO';
 import { contributorsDTO } from 'src/app/DTOs/ContributorDTO';
 import { createTaskDTO, taskDetailDTO, taskDTO } from 'src/app/DTOs/TaskDTO';
-import { taskListDTO, taskListItemDTO } from 'src/app/DTOs/TaskListDTO';
+import {
+  createTaskListDTO,
+  createTaskListItemDTO,
+  taskListDTO,
+  taskListItemDTO,
+  updateTaskListItemDTO,
+} from 'src/app/DTOs/TaskListDTO';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -12,10 +18,17 @@ import { environment } from 'src/environments/environment';
 export class TaskServiceService {
   constructor(private http: HttpClient) {}
 
-  createTaskList(taskList: taskListDTO, taskID: number) {
-    return this.http.post<taskListDTO>(
-      `${environment.apiUrl}/api/task/taskList/${taskID}`,
+  createTaskList(taskList: createTaskListDTO) {
+    return this.http.post<createTaskListDTO>(
+      `${environment.apiUrl}/api/tasklist/save`,
       taskList
+    );
+  }
+
+  createTaskListItem(taskListItem: createTaskListItemDTO) {
+    return this.http.post<createTaskListItemDTO>(
+      `${environment.apiUrl}/api/tasklistitem/save`,
+      taskListItem
     );
   }
 
@@ -35,7 +48,7 @@ export class TaskServiceService {
 
   getDetailedTaskDataByTaskID(taskID: number) {
     return this.http.get<taskDetailDTO>(
-      `${environment.apiUrl}/api/task/${taskID}`
+      `${environment.apiUrl}/api/task/detailedtask/${taskID}`
     );
   }
 
@@ -55,10 +68,17 @@ export class TaskServiceService {
     );
   }
 
-  updateTaskListByID(taskListID: number, taskListItems: taskListDTO) {
-    return this.http.post<taskListDTO>(
-      `${environment.apiUrl}/api/task/taskList/update/${taskListID}`,
+  updateTaskListByID(taskListItems: updateTaskListItemDTO) {
+    return this.http.post<updateTaskListItemDTO>(
+      `${environment.apiUrl}/api/tasklist/updatetasklist`,
       taskListItems
+    );
+  }
+
+  deleteTaskList(taskListID: number) {
+    return this.http.post<string>(
+      `${environment.apiUrl}/api/tasklist/delete/${taskListID}`,
+      null
     );
   }
 }

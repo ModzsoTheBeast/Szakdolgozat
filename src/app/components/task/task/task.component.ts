@@ -14,10 +14,13 @@ export class TaskComponent implements OnInit {
   @Input() taskID: number;
 
   name: string;
+  id: number;
   constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.name = this.taskName;
+    this.id = this.taskID;
+    console.log(this.id);
   }
 
   panelOpenState: boolean = false;
@@ -27,16 +30,16 @@ export class TaskComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.hasBackdrop = true;
-    dialogConfig.panelClass = ['task-dialog'];
+    dialogConfig.panelClass = 'task-dialog';
     if (window.innerWidth < 768) {
       dialogConfig.width = '80vw';
-      dialogConfig.height = '80vh';
+      dialogConfig.height = '85vh';
     } else {
       dialogConfig.width = '60vw';
-      dialogConfig.height = '80vh';
+      dialogConfig.height = '85vh';
     }
     dialogConfig.data = {
-      taskID: this.taskID,
+      taskID: this.id,
     };
     this.dialog.open(TaskDialogComponent, dialogConfig);
   }

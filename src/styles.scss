@@ -6,3 +6,10 @@
   font-weight: 500;
   box-sizing: border-box;
 }
+.task-dialog{
+  mat-dialog-container{
+    background: #2c2c2c !important;
+    overflow: hidden;
+  }
+
+}
