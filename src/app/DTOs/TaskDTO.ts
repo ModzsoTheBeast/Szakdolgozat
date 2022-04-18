@@ -7,7 +7,7 @@ export interface taskDTO {
   taskPosition?: number;
   TaskName: string;
   taskDescription: string;
-  done: boolean;
+  isDone: boolean;
 }
 
 export interface createTaskDTO {

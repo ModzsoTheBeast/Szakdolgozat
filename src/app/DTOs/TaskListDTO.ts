@@ -1,10 +1,16 @@
 export interface taskListDTO {
   taskListId?: number;
   taskListName: string;
-  taskListItems: taskListItemDTO[];
+  taskListItems: newTaskListItemDTO[];
 }
 
 export interface taskListItemDTO {
+  taskListItemId?: number;
+  taskListItemName: string;
+  isDone: boolean;
+}
+
+export interface newTaskListItemDTO {
   taskListItemId?: number;
   taskListItemName: string;
   isDone: boolean;

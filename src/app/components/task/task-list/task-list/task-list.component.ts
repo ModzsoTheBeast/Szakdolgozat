@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   createTaskListItemDTO,
+  newTaskListItemDTO,
   taskListDTO,
   taskListItemDTO,
   updateTaskListItemDTO,
@@ -39,7 +40,7 @@ export class TaskListComponent implements OnInit {
     this.allComplete =
       this.listData.taskListItems != null &&
       this.listData.taskListItems.every((t) => t.isDone);
-    let items: taskListItemDTO[] = [];
+    let items: newTaskListItemDTO[] = [];
     this.listData.taskListItems.forEach((item) => {
       items.push(item);
     });
@@ -71,7 +72,7 @@ export class TaskListComponent implements OnInit {
       return;
     }
     this.listData.taskListItems.forEach((t) => (t.isDone = completed));
-    let items: taskListItemDTO[] = [];
+    let items: newTaskListItemDTO[] = [];
     this.listData.taskListItems.forEach((item) => {
       items.push(item);
     });
@@ -94,7 +95,7 @@ export class TaskListComponent implements OnInit {
     };
     this.taskService.createTaskListItem(newItem).subscribe(
       (res) => {
-        let item: taskListItemDTO = {
+        let item: newTaskListItemDTO = {
           taskListItemId: res.id,
           taskListItemName: res.itemName,
           isDone: res.isDone,

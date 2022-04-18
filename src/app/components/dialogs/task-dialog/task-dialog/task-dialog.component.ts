@@ -20,50 +20,6 @@ import { TaskServiceService } from 'src/app/services/task-service/task-service.s
   styleUrls: ['./task-dialog.component.scss'],
 })
 export class TaskDialogComponent implements OnInit {
-  // dummyData: taskDetailDTO = {
-  //   name: 'dummy name',
-  //   done: false,
-  //   contributors: [
-  //     {
-  //       id: 1,
-  //       name: 'laci',
-  //       role: 'dev',
-  //     },
-  //     {
-  //       id: 1,
-  //       name: 'erik',
-  //       role: 'dev',
-  //     },
-  //   ],
-  //   cretedBy: 'dummy',
-  //   createdOn: new Date(),
-  //   desc: 'asdadsadsasd assda sdads da ssa d',
-  //   comments: [
-  //     {
-  //       id: 1,
-  //       createdBy: 'dummy',
-  //       createdOn: new Date(),
-  //       text: 'asdasdasds',
-  //     },
-  //     {
-  //       id: 1,
-  //       createdBy: 'dummy',
-  //       createdOn: new Date(),
-  //       text: 'loololol',
-  //     },
-  //   ],
-  //   deadline: new Date(),
-  //   taskLists: [
-  //     {
-  //       id: 1,
-  //       name: 'list1',
-  //       items: [
-  //         { name: 'item 1', isDone: true },
-  //         { name: 'item 2', isDone: false },
-  //       ],
-  //     },
-  //   ],
-  // };
   taskForm: FormGroup;
   commentForm: FormGroup;
   taskListForm: FormGroup;
