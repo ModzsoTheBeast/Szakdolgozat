@@ -101,7 +101,6 @@ export class TaskListComponent implements OnInit {
           isDone: res.isDone,
         };
         this.listData.taskListItems.push(item);
-        console.log(this.listData);
       },
       (error: HttpErrorResponse) => {
         this.snack.response('A lista elem létrehozása sikertelen!', 'close', 2);

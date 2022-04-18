@@ -21,86 +21,6 @@ import { CreateProjectDialogComponent } from '../dialogs/create-project-dialog/c
 })
 export class LandingPageComponent implements OnInit {
   stepperOrientation: Observable<StepperOrientation>;
-  // dummyProjects: ProjectsObj[] = [
-  //   {
-  //     projectID: 1,
-  //     projectName: 'teszt project1',
-  //     listsData: [
-  //       {
-  //         listName: 'list 1',
-  //         listTasksNumber: 0,
-  //       },
-  //       {
-  //         listName: 'list 2',
-  //         listTasksNumber: 0,
-  //       },
-  //       {
-  //         listName: 'list 3',
-  //         listTasksNumber: 1,
-  //       },
-  //       {
-  //         listName: 'list 4',
-  //         listTasksNumber: 7,
-  //       },
-  //       {
-  //         listName: 'list 5',
-  //         listTasksNumber: 12,
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     projectID: 2,
-  //     projectName: 'teszt project2',
-  //     listsData: [
-  //       {
-  //         listName: 'list 1',
-  //         listTasksNumber: 2,
-  //       },
-  //       {
-  //         listName: 'list 2',
-  //         listTasksNumber: 7,
-  //       },
-  //       {
-  //         listName: 'list 3',
-  //         listTasksNumber: 9,
-  //       },
-  //       {
-  //         listName: 'list 4',
-  //         listTasksNumber: 1,
-  //       },
-  //       {
-  //         listName: 'list 5',
-  //         listTasksNumber: 3,
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     projectId: 3,
-  //     projectName: 'teszt project3',
-  //     lists: [
-  //       {
-  //         listName: 'list 1',
-  //         listTasksNumber: 3,
-  //       },
-  //       {
-  //         listName: 'list 2',
-  //         listTasksNumber: 3,
-  //       },
-  //       {
-  //         listName: 'list 3',
-  //         listTasksNumber: 8,
-  //       },
-  //       {
-  //         listName: 'list 4',
-  //         listTasksNumber: 3,
-  //       },
-  //       {
-  //         listName: 'list 5',
-  //         listTasksNumber: 5,
-  //       },
-  //     ],
-  //   },
-  // ];
   projects: ProjectsObj[];
   user: number;
   lengthIsOne: Boolean = false;
@@ -149,7 +69,6 @@ export class LandingPageComponent implements OnInit {
 
     this.deleteService.deleteProject$.subscribe((res) => {
       this.shouldDelete = res;
-
       if (this.shouldDelete) {
         this.projects = [];
         this.reload();

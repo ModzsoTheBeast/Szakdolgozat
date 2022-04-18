@@ -75,6 +75,7 @@ export class UserUpdateDialogComponent implements OnInit {
             duration: this.durationInSeconds * 1000,
           });
           this.isLoading = false;
+          this.userService.updateHeader(this.username?.value);
           this.dialogRef.close();
         },
         (err: HttpErrorResponse) => {

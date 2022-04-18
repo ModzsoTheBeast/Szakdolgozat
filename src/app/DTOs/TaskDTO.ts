@@ -1,3 +1,4 @@
+import { priority } from '../models/enums/priorityEnum';
 import { commentDTO } from './CommentDTO';
 import { contributorsDTO } from './ContributorDTO';
 import { taskListDTO } from './TaskListDTO';
@@ -28,4 +29,23 @@ export interface taskDetailDTO {
   createdOn: Date;
   deadline?: Date;
   taskLists: taskListDTO[];
+  priority?: priority;
+}
+
+export interface updateTaskDTO {
+  taskId: number;
+  taskName?: string;
+  taskDescription?: string;
+  level?: string;
+  deadline?: Date;
+}
+
+export interface addDeadlineDTO {
+  taskId: number;
+  deadline: Date;
+}
+
+export interface setTaskPriorityDTO {
+  taskid: number;
+  priority: priority;
 }

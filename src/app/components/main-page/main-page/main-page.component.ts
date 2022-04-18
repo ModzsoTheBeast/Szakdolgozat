@@ -51,8 +51,6 @@ export class MainPageComponent implements OnInit {
         this.lists = [];
         this.listservice.getLists(this.projectID).subscribe(
           (res) => {
-            console.log(res);
-
             this.lists = res;
             this.loading = false;
             if ((res = [] || res.length == 0)) this.listsLength = false;
@@ -78,8 +76,6 @@ export class MainPageComponent implements OnInit {
     this.lists = [];
     this.listservice.getLists(this.projectID).subscribe(
       (res) => {
-        console.log(res);
-
         this.lists = res;
         this.loading = false;
         if ((res = [] || res.length == 0)) this.listsLength = false;

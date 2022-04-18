@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { TaskServiceService } from 'src/app/services/task-service/task-service.service';
 import { AddUserToProjectDialogComponent } from '../../dialogs/add-user-to-project-dialog/add-user-to-project-dialog/add-user-to-project-dialog.component';
 import { TaskDialogComponent } from '../../dialogs/task-dialog/task-dialog/task-dialog.component';
 
@@ -13,14 +14,23 @@ export class TaskComponent implements OnInit {
   @Input() taskDesc: string;
   @Input() taskID: number;
 
+  desc: string;
   name: string;
   id: number;
-  constructor(private dialog: MatDialog) {}
+  constructor(
+    private dialog: MatDialog,
+    private taskService: TaskServiceService
+  ) {
+    this.taskService.modifyTask$.subscribe((data) => {
+      this.name = data.taskName;
+      this.desc = data.taskDescription;
+    });
+  }
 
   ngOnInit(): void {
     this.name = this.taskName;
     this.id = this.taskID;
-    console.log(this.id);
+    this.desc = this.taskDesc;
   }
 
   panelOpenState: boolean = false;

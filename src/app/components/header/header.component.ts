@@ -7,6 +7,8 @@ import { map, startWith } from 'rxjs/operators';
 import { HeaderServiceService } from 'src/app/services/header-service/header-service.service';
 import { SidenavService } from 'src/app/services/sidenav/sidenav.service';
 import { ThemeService } from 'src/app/services/theme-service/theme-service';
+import { UserService } from 'src/app/services/user-service/user.service';
+import { AddUserToProjectDialogComponent } from '../dialogs/add-user-to-project-dialog/add-user-to-project-dialog/add-user-to-project-dialog.component';
 import { EditContributorComponent } from '../dialogs/edit-contributors-dialog/edit-contributor/edit-contributor.component';
 import { UserUpdateDialogComponent } from '../dialogs/user-update-dialog/user-update-dialog/user-update-dialog.component';
 
@@ -32,7 +34,8 @@ export class HeaderComponent implements OnInit {
     private themeService: ThemeService,
     private sidenavService: SidenavService,
     private header: HeaderServiceService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private userService: UserService
   ) {
     this.router.navigate(['login']);
     this.themeService.initTheme();
@@ -48,6 +51,10 @@ export class HeaderComponent implements OnInit {
     this.onMainPageSrc = this.header.onMainPageSource;
     this.onMainPageSrc.subscribe((value) => {
       this.onMainPage = value;
+    });
+
+    this.userService.updateHeader$.subscribe((res) => {
+      this.loggedInUser = res;
     });
   }
 
@@ -91,12 +98,29 @@ export class HeaderComponent implements OnInit {
     this.loggedInUser = '';
   }
 
+  openAddUserToProjectDialog() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.autoFocus = true;
+    dialogConfig.hasBackdrop = true;
+    if (window.innerWidth < 768) {
+      dialogConfig.width = 'auto';
+      dialogConfig.height = 'auto';
+    } else {
+      dialogConfig.width = '40vw';
+      dialogConfig.height = 'auto';
+    }
+    const dialogRef = this.dialog.open(
+      AddUserToProjectDialogComponent,
+      dialogConfig
+    );
+  }
+
   openEditContributorsDialog(): void {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.autoFocus = true;
     dialogConfig.hasBackdrop = true;
-    dialogConfig.panelClass = ['task-dialog'];
     if (window.innerWidth < 768) {
       dialogConfig.width = 'auto';
       dialogConfig.height = 'auto';

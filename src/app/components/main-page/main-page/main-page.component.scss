@@ -9,8 +9,8 @@
 .wrapper {
   display: flex;
   flex-direction: row;
-  overflow: hidden;
-  overflow-x: hidden;
+  overflow: scroll;
+  overflow-x: scroll;
   overflow-y: scroll;
   height: 100%;
 }

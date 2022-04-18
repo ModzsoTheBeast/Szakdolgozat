@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { contributorsDTO } from 'src/app/DTOs/ContributorDTO';
 import { environment } from 'src/environments/environment';
@@ -24,11 +24,19 @@ export class UserService {
   public currentUserSubject: BehaviorSubject<UserLoginDTO>;
   public currentUser: Observable<UserLoginDTO>;
 
+  updateHeader$: Observable<string>;
+  private updateHeaderSubject = new Subject<string>();
+
   constructor(private http: HttpClient, private jwtService: JwtTokenService) {
+    this.updateHeader$ = this.updateHeaderSubject.asObservable();
     this.currentUserSubject = new BehaviorSubject<UserLoginDTO>(
       JSON.parse(localStorage.getItem('loggedInUser') || '{}')
     );
     this.currentUser = this.currentUserSubject.asObservable();
+  }
+
+  updateHeader(data: string) {
+    this.updateHeaderSubject.next(data);
   }
 
   getUserByName(username: string) {
@@ -71,7 +79,7 @@ export class UserService {
   }
 
   userUpdate(user: UserUpdateDTO, userId: number) {
-    return this.http.put<UserUpdateDTO>(
+    return this.http.post<UserUpdateDTO>(
       `${environment.apiUrl}/api/user/update/${userId}`,
       user
     );
@@ -79,7 +87,7 @@ export class UserService {
 
   getAllContributors(projectID: number) {
     return this.http.get<contributorsDTO[]>(
-      `${environment.apiUrl}/api/contributors/${projectID}`
+      `${environment.apiUrl}/api/users/getusers/${projectID}`
     );
   }
 

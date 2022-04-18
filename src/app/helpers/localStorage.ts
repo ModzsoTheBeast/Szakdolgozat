@@ -8,7 +8,10 @@ export function getCurrentUserID(): number {
 }
 
 export function getCurrentUserName(): string {
-  var username = JSON.parse(localStorage.getItem('userName') || '{}');
+  var username = JSON.stringify(localStorage.getItem('userName') || '{}');
+  username = username.slice(1, -1);
+  console.log(username);
+
   return username;
 }
 

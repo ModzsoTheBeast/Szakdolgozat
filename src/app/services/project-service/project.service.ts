@@ -36,7 +36,6 @@ export class ProjectService {
   }
 
   myMethod(data: string) {
-    console.log(data);
     this.myMethodSubject.next(data);
   }
 }

@@ -85,7 +85,7 @@
     <mat-divider></mat-divider>
     <mat-toolbar-row *ngIf="isLoggedIn" style="height: 80%">
       <span>
-        <strong> Wecome, {{ loggedInUser }}! </strong>
+        <strong> Helló, {{ loggedInUser }}! </strong>
       </span>
       <span class="example-spacer"></span>
 
@@ -122,6 +122,13 @@
           (click)="openEditContributorsDialog()"
         >
           Tagok <mat-icon>supervisor_account</mat-icon>
+        </button>
+        <button
+          *ngIf="onMainPage"
+          mat-menu-item
+          (click)="openAddUserToProjectDialog()"
+        >
+          Meghívás <mat-icon>person_add</mat-icon>
         </button>
       </mat-menu>
     </mat-toolbar-row>

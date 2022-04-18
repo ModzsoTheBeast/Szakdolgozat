@@ -8,8 +8,11 @@
 }
 .task-dialog{
   mat-dialog-container{
-    background: #2c2c2c !important;
+    //background: #2c2c2c !important;
     overflow: hidden;
+  }
+  .mat-dialog-content{
+    max-height: 90%;
   }
 
 }

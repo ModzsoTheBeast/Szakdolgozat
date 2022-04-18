@@ -1,6 +1,19 @@
 export class commentDTO {
-  id?: number;
+  taskCommentId?: number;
   createdOn: Date;
   createdBy: string;
-  text: string;
+  comment: string;
+}
+
+export interface createCommentDTO {
+  taskId: number;
+  userId: number;
+  comment: string;
+  createdOn?: Date;
+  taskCommentId?: number;
+}
+
+export interface updateCommentDTO {
+  comment: string;
+  taskCommentId: number;
 }

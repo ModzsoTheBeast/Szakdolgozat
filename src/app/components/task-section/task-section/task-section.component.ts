@@ -53,11 +53,8 @@ export class TaskSectionComponent implements OnInit {
   ngOnInit() {
     this.tasks = this._tasks;
     this.listid = this.listID;
-    console.log(this.listsLength);
     this.isListLast = this.listPosition == this.listsLength - 1 ? true : false;
     this.isListFirst = this.listPosition == 0 ? true : false;
-    console.log(this.isListLast);
-    console.log(this.isListFirst);
   }
 
   ngOnDestroy() {
@@ -102,7 +99,6 @@ export class TaskSectionComponent implements OnInit {
       listId: this.listid,
     };
     this.taskService.createNewTask(task).subscribe((res) => {
-      console.log(res);
       this.tasks.push(res);
     });
     this.createTaskBool = false;
@@ -141,7 +137,6 @@ export class TaskSectionComponent implements OnInit {
       } catch (e) {
         console.log(e);
       }
-      console.log(event);
     } else {
       transferArrayItem(
         event.previousContainer.data,
@@ -159,13 +154,11 @@ export class TaskSectionComponent implements OnInit {
         startListLength: event.previousContainer.data.length,
         endListLength: event.container.data.length,
       };
-      console.log(obj);
       try {
         this.taskService.moveTaskDataBetweenTasks(obj).subscribe();
       } catch (e) {
         console.log(e);
       }
-      console.log(event);
     }
   }
 }

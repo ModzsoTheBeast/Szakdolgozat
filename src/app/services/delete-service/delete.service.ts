@@ -11,17 +11,24 @@ export class DeleteService {
   deleteTaskList$: Observable<number>;
   private deleteTaskListSubject = new Subject<number>();
 
+  deleteComment$: Observable<number>;
+  private deleteCommentSubject = new Subject<number>();
+
   constructor() {
     this.deleteProject$ = this.deleteProjectSubject.asObservable();
     this.deleteTaskList$ = this.deleteTaskListSubject.asObservable();
+    this.deleteComment$ = this.deleteCommentSubject.asObservable();
   }
 
   deleteProject(data: boolean) {
-    console.log(data);
     this.deleteProjectSubject.next(data);
   }
 
   deleteTaskList(taskListId: number) {
     this.deleteTaskListSubject.next(taskListId);
+  }
+
+  deleteComment(taskCommentId: number) {
+    this.deleteCommentSubject.next(taskCommentId);
   }
 }

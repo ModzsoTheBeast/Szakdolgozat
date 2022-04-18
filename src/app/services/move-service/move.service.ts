@@ -13,7 +13,6 @@ export class MoveService {
   }
 
   moveList(data: boolean) {
-    console.log(data);
     this.moveListSubject.next(data);
   }
 }

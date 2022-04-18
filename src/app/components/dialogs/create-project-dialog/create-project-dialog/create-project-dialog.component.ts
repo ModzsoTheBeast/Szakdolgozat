@@ -40,7 +40,6 @@ export class CreateProjectDialogComponent implements OnInit {
     )
       return;
     this.isLoading = true;
-    console.log('asdf');
     this.projectService
       .createProjects({
         userId: this.user,
@@ -51,10 +50,8 @@ export class CreateProjectDialogComponent implements OnInit {
           //this.projectService.myMethod(next.projectName);
           this.isLoading = false;
           this.dialogRef.close();
-          console.log(next);
         },
         (err: HttpErrorResponse) => {
-          console.log(err);
           this.snackBar.open('Nem sikerült létrehozni a projektet!', '', {
             duration: 2000,
           });

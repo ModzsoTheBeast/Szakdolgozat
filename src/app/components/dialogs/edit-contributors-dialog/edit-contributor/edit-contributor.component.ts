@@ -40,18 +40,11 @@ export class EditContributorComponent implements OnInit {
     this.userService.getAllEmails(id).subscribe((res: string[]) => {
       this.emailOptions = res;
     });
-    this.userService.getAllContributors(1).subscribe(
+    this.userService.getAllContributors(id).subscribe(
       (resoult: any) => {
         this.contr = resoult;
       },
-      (error: HttpErrorResponse) => {
-        this.contr.push(
-          { id: 1, name: 'asd', role: 'asddas' },
-          { id: 2, name: 'asd', role: 'asddas' },
-          { id: 3, name: 'asd', role: 'asddas' },
-          { id: 4, name: 'asd', role: 'asddas' }
-        );
-      }
+      (error: HttpErrorResponse) => {}
     );
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),

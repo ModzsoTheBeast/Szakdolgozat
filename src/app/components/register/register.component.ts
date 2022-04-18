@@ -74,7 +74,6 @@ export class RegisterComponent implements OnInit {
           this.router.navigate(['login']);
         },
         (err: HttpErrorResponse) => {
-          console.log(err);
           this.snackBar.open('Sikertelen regisztráció!', '', {
             duration: this.durationInSeconds * 1000,
           });

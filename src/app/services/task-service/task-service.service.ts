@@ -1,8 +1,24 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { commentDTO } from 'src/app/DTOs/CommentDTO';
-import { contributorsDTO } from 'src/app/DTOs/ContributorDTO';
-import { createTaskDTO, taskDetailDTO, taskDTO } from 'src/app/DTOs/TaskDTO';
+import { Observable, Subject } from 'rxjs';
+import {
+  commentDTO,
+  createCommentDTO,
+  updateCommentDTO,
+} from 'src/app/DTOs/CommentDTO';
+import {
+  addNewContrsDTO,
+  contributorsDTO,
+  removeUserFromTaskDTO,
+} from 'src/app/DTOs/ContributorDTO';
+import {
+  addDeadlineDTO,
+  createTaskDTO,
+  setTaskPriorityDTO,
+  taskDetailDTO,
+  taskDTO,
+  updateTaskDTO,
+} from 'src/app/DTOs/TaskDTO';
 import {
   createTaskListDTO,
   createTaskListItemDTO,
@@ -16,7 +32,51 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class TaskServiceService {
-  constructor(private http: HttpClient) {}
+  modifyTask$: Observable<modifyTaskObj>;
+  private modifyTaskSubject = new Subject<modifyTaskObj>();
+
+  constructor(private http: HttpClient) {
+    this.modifyTask$ = this.modifyTaskSubject.asObservable();
+  }
+
+  deleteTask(taskId: number) {
+    return this.http.post(
+      `${environment.apiUrl}/api/task/delete/${taskId}`,
+      null
+    );
+  }
+
+  setTaskPriority(data: setTaskPriorityDTO) {
+    return this.http.post<setTaskPriorityDTO>(
+      `${environment.apiUrl}/api/task/priority`,
+      data
+    );
+  }
+
+  modifyTask(data: modifyTaskObj) {
+    this.modifyTaskSubject.next(data);
+  }
+
+  updateTask(data: updateTaskDTO) {
+    return this.http.post<updateTaskDTO>(
+      `${environment.apiUrl}/api/task/uptade`,
+      data
+    );
+  }
+
+  addDeadline(data: addDeadlineDTO) {
+    return this.http.post<addDeadlineDTO>(
+      `${environment.apiUrl}/api/task/adddeadline`,
+      data
+    );
+  }
+
+  removeContributorFromTask(data: removeUserFromTaskDTO) {
+    return this.http.post<removeUserFromTaskDTO>(
+      `${environment.apiUrl}/api/task/removeuserfromtask`,
+      data
+    );
+  }
 
   createTaskList(taskList: createTaskListDTO) {
     return this.http.post<createTaskListDTO>(
@@ -39,9 +99,9 @@ export class TaskServiceService {
     );
   }
 
-  createComment(comment: commentDTO, taskID: number) {
-    return this.http.post<commentDTO>(
-      `${environment.apiUrl}/api/task/comment/${taskID}`,
+  createComment(comment: createCommentDTO) {
+    return this.http.post<createCommentDTO>(
+      `${environment.apiUrl}/api/taskcomment/save`,
       comment
     );
   }
@@ -81,6 +141,27 @@ export class TaskServiceService {
       null
     );
   }
+
+  addContributors(data: addNewContrsDTO) {
+    return this.http.post<addNewContrsDTO>(
+      `${environment.apiUrl}/api/task/addusers`,
+      data
+    );
+  }
+
+  deleteTaskComment(taskCommentId: number) {
+    return this.http.post(
+      `${environment.apiUrl}/api/taskcomment/delete/${taskCommentId}`,
+      null
+    );
+  }
+
+  updateTaskComment(data: updateCommentDTO) {
+    return this.http.post<updateCommentDTO>(
+      `${environment.apiUrl}/api/taskcomment/update`,
+      data
+    );
+  }
 }
 
 export class MoveTaskDataObj {
@@ -96,4 +177,10 @@ export class MoveTaskDataBetweenTasksObj {
   endTaskPosition: number;
   startListLength: number;
   endListLength: number;
+}
+
+export interface modifyTaskObj {
+  taskId: number;
+  taskName: string;
+  taskDescription: string;
 }
