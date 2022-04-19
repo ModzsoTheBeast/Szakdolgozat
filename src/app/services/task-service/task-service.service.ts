@@ -59,7 +59,7 @@ export class TaskServiceService {
 
   updateTask(data: updateTaskDTO) {
     return this.http.post<updateTaskDTO>(
-      `${environment.apiUrl}/api/task/uptade`,
+      `${environment.apiUrl}/api/task/update`,
       data
     );
   }
