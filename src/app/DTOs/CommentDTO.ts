@@ -1,5 +1,5 @@
 export class commentDTO {
-  taskCommentId?: number;
+  commentId: number;
   createdOn: Date;
   createdBy: string;
   comment: string;
@@ -10,7 +10,7 @@ export interface createCommentDTO {
   userId: number;
   comment: string;
   createdOn?: Date;
-  taskCommentId?: number;
+  commentId?: number;
 }
 
 export interface updateCommentDTO {

@@ -33,6 +33,13 @@ export class ListServiceService {
     );
   }
 
+  deleteList(listId: number) {
+    return this.http.post<string>(
+      `${environment.apiUrl}/api/list/delete/${listId}`,
+      listId
+    );
+  }
+
   moveList(moveListData: MoveListDataObj) {
     return this.http
       .post<MoveListDataObj>(

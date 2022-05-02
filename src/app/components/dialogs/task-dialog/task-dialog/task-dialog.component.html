@@ -29,7 +29,7 @@
       </div>
       <p
         *ngIf="!editingTask; else notEditing"
-        style="align-self: center; width: 100%"
+        style="align-self: center; width: 100%; overflow-wrap: break-word"
       >
         {{ taskData.taskDescription }}
       </p>
@@ -53,14 +53,14 @@
               matInput
               formControlName="taskDescName"
               #taskDescName
-              maxlength="500"
+              maxlength="250"
               cdkTextareaAutosize
               type="text"
               placeholder="Megjegyzés.."
               >{{ taskData.taskDescription }}</textarea
             >
             <mat-hint align="end"
-              >{{ taskDescName.value.length }} / 500</mat-hint
+              >{{ taskDescName.value.length }} / 250</mat-hint
             >
           </mat-form-field>
           <button
@@ -70,7 +70,7 @@
               taskNameid.value.length == 0 && taskDescName.value.length == 0
             "
             color="primary"
-            style="margin-right: 1em"
+            style="margin-right: 1em; margin-bottom: 1em"
           >
             Mentés
           </button>
@@ -92,7 +92,11 @@
         </button>
       </div>
 
-      <form style="display: flex" *ngIf="addContributors">
+      <form
+        style="display: flex"
+        *ngIf="addContributors"
+        (ngSubmit)="addContributor()"
+      >
         <mat-form-field appearance="fill" style="width: 80%">
           <mat-label>Tagok</mat-label>
           <mat-select [(ngModel)]="selectedUsers" multiple name="user">
@@ -104,7 +108,7 @@
         <button
           style="margin-top: 1.2em; margin-left: 1em"
           mat-mini-fab
-          (click)="addContributor()"
+          type="submit"
           color="accent"
         >
           <mat-icon color="primary">person_add</mat-icon>
@@ -193,7 +197,7 @@
             formControlName="taskCommentName"
             cdkTextareaAutosize
             style="overflow: hidden"
-            maxlength="500"
+            maxlength="250"
             #taskComment
             required
           ></textarea>
@@ -205,7 +209,7 @@
           >
             <mat-icon color="accent">add_comment</mat-icon>
           </button>
-          <mat-hint align="end">{{ taskComment.value.length }} / 500</mat-hint>
+          <mat-hint align="end">{{ taskComment.value.length }} / 250</mat-hint>
           <mat-error *ngIf="taskListForm?.invalid">Kötelező!</mat-error>
         </mat-form-field>
       </form>
@@ -242,17 +246,19 @@
         <mat-label>Prioritás</mat-label>
         <mat-select (selectionChange)="prioritySelected($event)">
           <mat-option>None</mat-option>
-          <mat-option style="color: red" value="IMPORTANT">
-            IMPORTANT
+          <mat-option style="color: darkred" value="BLOCKER">
+            BLOCKER
           </mat-option>
-          <mat-option value="option2">Option 2</mat-option>
-          <mat-option value="option3">Option 3</mat-option>
-          <mat-option value="option1">Option 1</mat-option>
-          <mat-option value="option2">Option 2</mat-option>
-          <mat-option value="option3">Option 3</mat-option>
+          <mat-option style="color: red" value="CRITICAL">CRITICAL</mat-option>
+          <mat-option style="color: orange" value="MAJOR">MAJOR</mat-option>
+          <mat-option style="color: yellow" value="MEDIUM">MEDIUM</mat-option>
+          <mat-option style="color: green" value="MINOR">MINOR</mat-option>
+          <mat-option value="TRIVIAL">TRIVIAL</mat-option>
         </mat-select>
       </mat-form-field>
-      <p *ngIf="taskData.priority">{{ taskData.priority }}</p>
+      <p *ngIf="taskData.level" style="margin-left: 1em">
+        {{ taskData.level }}
+      </p>
       <button
         mat-raised-button
         color="primary"
@@ -281,7 +287,9 @@
         </mat-datepicker-toggle>
         <mat-datepicker #picker disabled="false"></mat-datepicker>
       </mat-form-field>
-      <div *ngIf="taskData.deadline">Határidő: {{ taskData.deadline }}</div>
+      <div *ngIf="taskData.deadline" style="margin-left: 1em">
+        Határidő: {{ taskData.deadline | date: "medium" }}
+      </div>
     </div>
   </div>
 </mat-dialog-content>

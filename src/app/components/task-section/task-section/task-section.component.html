@@ -1,6 +1,5 @@
 <mat-card class="example-container">
   <button
-    [hidden]="isListFirst"
     class="position-absolute top-0 start-0"
     mat-icon-button
     matTooltip="Lista mozgatása balra"
@@ -13,7 +12,6 @@
     {{ title }} - {{ tasks?.length ? tasks.length : 0 }}
   </h5>
   <button
-    [hidden]="isListLast"
     class="position-absolute top-0 end-0"
     mat-icon-button
     matTooltip="Lista mozgatása jobbra"
@@ -21,6 +19,15 @@
     (click)="moveListToRight()"
   >
     <mat-icon color="accent">keyboard_arrow_right</mat-icon>
+  </button>
+  <button
+    class="position-absolute bottom-0 end-0"
+    mat-icon-button
+    matTooltip="Lista törlése"
+    matTooltipPosition="right"
+    (click)="deleteList()"
+  >
+    <mat-icon color="warn">delete_forever</mat-icon>
   </button>
   <div
     #fasz
@@ -35,6 +42,7 @@
         [taskID]="taskData.taskId"
         [taskName]="taskData.taskName"
         [taskDesc]="taskData.taskDescription"
+        [taskPriority]="taskData.priority"
       ></app-task>
     </div>
   </div>

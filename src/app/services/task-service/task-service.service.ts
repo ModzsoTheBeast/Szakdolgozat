@@ -40,7 +40,7 @@ export class TaskServiceService {
   }
 
   deleteTask(taskId: number) {
-    return this.http.post(
+    return this.http.post<string>(
       `${environment.apiUrl}/api/task/delete/${taskId}`,
       null
     );

@@ -11,3 +11,7 @@ export interface CreateProjectDTO {
   userId: number;
   projectName: string;
 }
+export interface removeUserFromProjectDTO {
+  userId: number;
+  projectId: number;
+}

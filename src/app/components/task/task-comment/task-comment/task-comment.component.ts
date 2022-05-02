@@ -29,7 +29,7 @@ export class TaskCommentComponent implements OnInit {
     this.data = this._data;
     this.user = getCurrentUserName();
     this.createCommentForm();
-    this.commentId = this._data.taskCommentId as number;
+    this.commentId = this._data.commentId;
   }
 
   removeComment() {

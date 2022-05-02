@@ -61,14 +61,12 @@ export class UserUpdateDialogComponent implements OnInit {
     var user = getCurrentUserID();
 
     this.userService
-      .userUpdate(
-        {
-          userName: this.username?.value,
-          password: this.password1?.value,
-          userEmail: this.email?.value,
-        },
-        user
-      )
+      .userUpdate({
+        id: user,
+        userName: this.username?.value,
+        password: this.password1?.value,
+        userEmail: this.email?.value,
+      })
       .subscribe(
         (next) => {
           this.snackBar.open('Az adatok módosítása sikeres volt!', '', {

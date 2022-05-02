@@ -11,7 +11,11 @@ import {
   getCurrentUserID,
 } from 'src/app/helpers/localStorage';
 import { MoveService } from 'src/app/services/move-service/move.service';
-
+import { DeleteService } from 'src/app/services/delete-service/delete.service';
+import { UserService } from 'src/app/services/user-service/user.service';
+import { GetUserRoleInProjectDTO } from 'src/app/DTOs/UserDTO';
+import { roles } from 'src/app/models/enums/roleEnum';
+import { ListDTO } from '../../../DTOs/ListDTOs';
 @Component({
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
@@ -32,13 +36,16 @@ export class MainPageComponent implements OnInit {
   loading: Boolean;
   listsLength: Boolean = false;
   lists: any[];
+  listsView: ListDTO[];
   moving: boolean = false;
   constructor(
     public dialog: MatDialog,
     private listservice: ListServiceService,
     private createListService: CreateListService,
     private snackBar: MatSnackBar,
-    private moveService: MoveService
+    private moveService: MoveService,
+    private deleteService: DeleteService,
+    private userService: UserService
   ) {
     this.moveService.moveList$.subscribe((res) => {
       if (res) this.moving = true;
@@ -51,7 +58,8 @@ export class MainPageComponent implements OnInit {
         this.lists = [];
         this.listservice.getLists(this.projectID).subscribe(
           (res) => {
-            this.lists = res;
+            this.listsView = res;
+            this.lists = this.listsView;
             this.loading = false;
             if ((res = [] || res.length == 0)) this.listsLength = false;
             else this.listsLength = true;
@@ -69,14 +77,24 @@ export class MainPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loading = true;
     var pID = getCurrentProjectID();
+    let uID = getCurrentUserID();
+    let obj: GetUserRoleInProjectDTO = {
+      userId: uID,
+      projectId: pID,
+    };
+    this.userService.getUserRoleInProject(obj).subscribe((res) => {
+      localStorage.setItem('userRole', String(res.role));
+      this.userService.setRole(res.role as roles);
+    });
+    this.loading = true;
     this.projectID = pID;
     this.userID = getCurrentUserID();
     this.lists = [];
     this.listservice.getLists(this.projectID).subscribe(
       (res) => {
-        this.lists = res;
+        this.listsView = res;
+        this.lists = this.listsView;
         this.loading = false;
         if ((res = [] || res.length == 0)) this.listsLength = false;
         else this.listsLength = true;
@@ -89,6 +107,13 @@ export class MainPageComponent implements OnInit {
         this.loading = false;
       }
     );
+    this.deleteService.deleteList$.subscribe((x) => {
+      let index = this.listsView.findIndex((p) => p.listId == x);
+      if (index != -1) {
+        this.listsView.splice(index, 1);
+        this.lists = this.listsView;
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -120,7 +145,8 @@ export class MainPageComponent implements OnInit {
       this.loading = true;
       this.listservice.getLists(this.projectID).subscribe(
         (res) => {
-          this.lists = res;
+          this.listsView = res;
+          this.lists = this.listsView;
           this.loading = false;
           this.listsLength = true;
         },

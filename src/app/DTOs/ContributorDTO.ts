@@ -24,3 +24,9 @@ export interface removeUserFromTaskDTO {
   userId: number;
   taskId: number;
 }
+
+export interface editContributorsRoleDTO {
+  userId: number;
+  projectId: number;
+  role: string;
+}

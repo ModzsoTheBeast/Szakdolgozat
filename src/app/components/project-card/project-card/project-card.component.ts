@@ -72,15 +72,4 @@ export class ProjectCardComponent implements OnInit {
     localStorage.setItem('current_project', JSON.stringify(this.projectID));
     this.router.navigate(['main']);
   }
-
-  deleteProject() {
-    this.projectService.deleteProject(this.projectID).subscribe(
-      (res) => {
-        this.deleteService.deleteProject(true);
-      },
-      (error: HttpErrorResponse) => {
-        this.deleteService.deleteProject(true);
-      }
-    );
-  }
 }

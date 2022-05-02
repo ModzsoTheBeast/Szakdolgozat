@@ -1,20 +1,20 @@
 <div
   class="position-absolute top-50 start-50 translate-middle"
-  style="width: 80vw; z-index: 100"
+  style="width: 80vw; z-index: 100; overflow: auto; white-space: nowrap"
   *ngIf="loading"
 >
   <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
   <h3 style="color: #d9b08c">Listák és kártyák betöltése ...</h3>
 </div>
 <div>
-  <div style="height: 100%">
+  <div style="height: 100%; overflow: auto; white-space: nowrap">
+    <!-- (mousedown)="startDragging($event, false, elemt)"
+    (mouseup)="stopDragging($event, false)"
+    (mouseleave)="stopDragging($event, false)"
+    (mousemove)="moveEvent($event, elemt)" -->
     <div
-      style="overflow-x: scroll"
+      style="overflow-x: scroll; overflow: auto; white-space: nowrap"
       #elemt
-      (mousedown)="startDragging($event, false, elemt)"
-      (mouseup)="stopDragging($event, false)"
-      (mouseleave)="stopDragging($event, false)"
-      (mousemove)="moveEvent($event, elemt)"
       *ngIf="!loading"
       cdkDropListGroup
       style="height: 80%"

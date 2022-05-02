@@ -5,10 +5,9 @@ import { taskListDTO } from './TaskListDTO';
 
 export interface taskDTO {
   taskId?: number;
-  taskPosition?: number;
   TaskName: string;
   taskDescription: string;
-  isDone: boolean;
+  priority: priority;
 }
 
 export interface createTaskDTO {
@@ -29,7 +28,7 @@ export interface taskDetailDTO {
   createdOn: Date;
   deadline?: Date;
   taskLists: taskListDTO[];
-  priority?: priority;
+  level?: priority;
 }
 
 export interface updateTaskDTO {
@@ -46,6 +45,6 @@ export interface addDeadlineDTO {
 }
 
 export interface setTaskPriorityDTO {
-  taskid: number;
+  taskId: number;
   priority: priority;
 }

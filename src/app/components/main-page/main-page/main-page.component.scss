@@ -9,11 +9,29 @@
 .wrapper {
   display: flex;
   flex-direction: row;
-  overflow: scroll;
-  overflow-x: scroll;
-  overflow-y: scroll;
   height: 100%;
 }
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+display:none;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #116466; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #083133; 
+}
+
 .wrapper::-webkit-scrollbar {
   display: none;
 }

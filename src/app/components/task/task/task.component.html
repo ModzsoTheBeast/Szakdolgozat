@@ -5,12 +5,26 @@
     (opened)="panelOpenState = true"
     (closed)="panelOpenState = false"
   >
-    <mat-expansion-panel-header class="example-box">
-      <mat-panel-title> {{ name }}</mat-panel-title>
+    <mat-expansion-panel-header class="example-box" style="align-items: center">
+      <mat-panel-title style="align-items: center">
+        {{ name }} {{ id }}
+        <div
+          [id]="id"
+          appPriorityDirective
+          [color]="color"
+          style="
+            height: 0.8em;
+            width: 4em;
+            margin-left: 1em;
+            border-radius: 10%;
+            opacity: 60%;
+          "
+        ></div
+      ></mat-panel-title>
     </mat-expansion-panel-header>
     <mat-panel-description style="height: auto; vertical-align: middle">
       <div style="width: 100%">
-        <p style="float: left; width: 80%">
+        <p style="float: left; width: 80%; overflow-x: auto">
           {{ desc }}
         </p>
         <button

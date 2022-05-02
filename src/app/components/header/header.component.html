@@ -114,21 +114,36 @@
       </button>
       <mat-menu #beforeMenu="matMenu" xPosition="before">
         <button mat-menu-item (click)="openProfileDialog()">
-          Profil <mat-icon>verified_user</mat-icon>
+          <mat-icon>verified_user</mat-icon>
+          <span> Profil </span>
         </button>
         <button
-          *ngIf="onMainPage"
+          *ngIf="onMainPage && isOwner"
           mat-menu-item
           (click)="openEditContributorsDialog()"
         >
-          Tagok <mat-icon>supervisor_account</mat-icon>
+          <mat-icon>supervisor_account</mat-icon>
+          <span> Tagok </span>
         </button>
         <button
           *ngIf="onMainPage"
           mat-menu-item
           (click)="openAddUserToProjectDialog()"
         >
-          Meghívás <mat-icon>person_add</mat-icon>
+          <mat-icon>person_add</mat-icon>
+          <span> Meghívás </span>
+        </button>
+        <button *ngIf="onMainPage" mat-menu-item (click)="leaveProject()">
+          <mat-icon>sentiment_very_dissatisfied</mat-icon>
+          <span> Projekt elhagyása </span>
+        </button>
+        <button
+          *ngIf="onMainPage && isOwner"
+          mat-menu-item
+          (click)="deleteProject()"
+        >
+          <mat-icon>delete_forever</mat-icon>
+          <span> Projekt törlése! </span>
         </button>
       </mat-menu>
     </mat-toolbar-row>

@@ -32,6 +32,7 @@ import { EditContributorComponent } from './components/dialogs/edit-contributors
 import { TaskCommentComponent } from './components/task/task-comment/task-comment/task-comment.component';
 import { TaskListComponent } from './components/task/task-list/task-list/task-list.component';
 import { snack } from './helpers/snack';
+import { PriorityDirectiveDirective } from './helpers/directives/priority-directive.directive';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { snack } from './helpers/snack';
     EditContributorComponent,
     TaskCommentComponent,
     TaskListComponent,
+    PriorityDirectiveDirective,
   ],
   imports: [
     BrowserModule,

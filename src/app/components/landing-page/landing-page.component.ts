@@ -7,7 +7,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { findIndex, map } from 'rxjs/operators';
 import { CreateProjectDTO, ProjectsObj } from 'src/app/DTOs/ProjectsDTOs';
 import { getCurrentUserID } from 'src/app/helpers/localStorage';
 import { DeleteService } from 'src/app/services/delete-service/delete.service';
@@ -27,7 +27,7 @@ export class LandingPageComponent implements OnInit {
   loading: Boolean = false;
   maxProjectNumber: Boolean = false;
   plength: number = 0;
-  shouldDelete: boolean = false;
+
   constructor(
     private router: Router,
     private breakpointObserver: BreakpointObserver,
@@ -68,12 +68,8 @@ export class LandingPageComponent implements OnInit {
     });
 
     this.deleteService.deleteProject$.subscribe((res) => {
-      this.shouldDelete = res;
-      if (this.shouldDelete) {
-        this.projects = [];
-        this.reload();
-      }
-      this.shouldDelete = false;
+      let index = this.projects.findIndex((p) => p.projectId == res);
+      this.projects.splice(index, 1);
     });
   }
 

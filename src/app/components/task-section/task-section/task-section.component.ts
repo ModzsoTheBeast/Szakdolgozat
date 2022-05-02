@@ -12,6 +12,7 @@ import {
   getCurrentUserID,
 } from 'src/app/helpers/localStorage';
 import { snack } from 'src/app/helpers/snack';
+import { DeleteService } from 'src/app/services/delete-service/delete.service';
 import { ListServiceService } from 'src/app/services/list-service/list-service.service';
 import { MoveService } from 'src/app/services/move-service/move.service';
 import {
@@ -19,6 +20,7 @@ import {
   MoveTaskDataObj,
   TaskServiceService,
 } from 'src/app/services/task-service/task-service.service';
+import Swal from 'sweetalert2';
 import { createTaskDTO, taskDTO } from '../../../DTOs/TaskDTO';
 @Component({
   selector: 'app-task-section',
@@ -45,12 +47,20 @@ export class TaskSectionComponent implements OnInit {
     private taskService: TaskServiceService,
     private listService: ListServiceService,
     private snack: snack,
-    private moveService: MoveService
+    private moveService: MoveService,
+    private deleteService: DeleteService
   ) {
     this.createListForm();
   }
 
   ngOnInit() {
+    this.deleteService.deleteTask$.subscribe((id) => {
+      let index = this._tasks.findIndex((task) => task.taskId == id);
+      if (index != -1) {
+        this._tasks.splice(index, 1);
+      }
+      this.tasks = this._tasks;
+    });
     this.tasks = this._tasks;
     this.listid = this.listID;
     this.isListLast = this.listPosition == this.listsLength - 1 ? true : false;
@@ -59,7 +69,31 @@ export class TaskSectionComponent implements OnInit {
 
   ngOnDestroy() {
     this.tasks = [];
-    let asd = document.getElementById('fasz')?.remove();
+  }
+
+  deleteList() {
+    Swal.fire({
+      title: 'Bitos vagy benne?',
+      text: 'Nem fogod tudni visszaállítani!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Igen, töröld ki!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire('Törölve!', '', 'success');
+        this.listService.deleteList(this.listID).subscribe(
+          (res) => {},
+          (error: HttpErrorResponse) => {},
+          () => {}
+        );
+        this.deleteService.deleteList(this.listID);
+        this.isListLast =
+          this.listPosition == this.listsLength - 1 ? true : false;
+        this.isListFirst = this.listPosition == 0 ? true : false;
+      }
+    });
   }
 
   moveListToLeft() {
@@ -67,6 +101,9 @@ export class TaskSectionComponent implements OnInit {
       listPosition: this.listPosition,
       projectId: getCurrentProjectID(),
     };
+    if (this.listPosition == 0 || this.listPosition == undefined) {
+      return;
+    }
     this.listService.moveListToLeft(position).subscribe(
       (res) => {
         this.moveService.moveList(true);
@@ -78,6 +115,12 @@ export class TaskSectionComponent implements OnInit {
   }
 
   moveListToRight() {
+    if (
+      this.listPosition == this.listsLength - 1 ||
+      this.listPosition == undefined
+    ) {
+      return;
+    }
     let position: MoveDTO = {
       listPosition: this.listPosition,
       projectId: getCurrentProjectID(),

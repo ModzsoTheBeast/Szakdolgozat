@@ -27,7 +27,9 @@
     </button>
   </mat-card-title>
   <mat-card-content>
-    <h6 *ngIf="!isEditing; else elseBlock">{{ data.comment }}</h6>
+    <h6 *ngIf="!isEditing; else elseBlock" style="overflow-wrap: break-word">
+      {{ data.comment }}
+    </h6>
     <ng-template #elseBlock>
       <form [formGroup]="commentEditForm" (ngSubmit)="saveChanges()">
         <mat-form-field appearance="fill" style="width: 100%">
@@ -39,7 +41,7 @@
             formControlName="taskCommentName"
             cdkTextareaAutosize
             style="overflow: hidden"
-            maxlength="500"
+            maxlength="250"
             #taskComment
             [value]="data.comment"
             required
@@ -52,7 +54,7 @@
           >
             <mat-icon color="accent">edit</mat-icon>
           </button>
-          <mat-hint align="end">{{ taskComment.value.length }} / 500</mat-hint>
+          <mat-hint align="end">{{ taskComment.value.length }} / 250</mat-hint>
           <mat-error *ngIf="commentEditForm?.invalid">Kötelező!</mat-error>
         </mat-form-field>
       </form>

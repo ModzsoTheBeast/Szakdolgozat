@@ -33,7 +33,6 @@ export class AddUserToProjectDialogComponent implements OnInit {
     let data: emailDetailsDTO = {
       projectId: pId,
       toEmail: this.email?.value,
-      fromEmail: 'lokospatrik8@gmail.com',
     };
     this.emailService.sendEmail(data).subscribe(
       (res) => {

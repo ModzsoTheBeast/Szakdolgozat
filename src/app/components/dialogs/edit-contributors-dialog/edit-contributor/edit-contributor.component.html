@@ -3,27 +3,31 @@
   <mat-list>
     <mat-list-item *ngFor="let con of contr; last as last">
       <p mat-line class="demo-2">{{ con.userName }}</p>
-      <div *ngIf="editing; else elseBlock">
-        <mat-form-field appearance="fill">
-          <mat-label>Szerepkörök</mat-label>
-          <mat-select [value]="con.role">
-            <mat-option *ngFor="let role of roles" [value]="role">
-              {{ role }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <ng-template #elseBlock>
-        <p>{{ con.role }}</p>
-      </ng-template>
-      <button mat-icon-button (click)="editing = !editing">
-        <mat-icon color="accent">edit</mat-icon>
+      <mat-form-field appearance="outline">
+        <mat-label>Szerepkörök</mat-label>
+        <mat-select
+          [value]="con.role"
+          (valueChange)="valueChanged($event, con)"
+        >
+          <mat-option *ngFor="let role of enumKeys" [value]="role">
+            {{ role }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button
+        style="margin-left: 1em"
+        mat-icon-button
+        (click)="removeFromProject(con)"
+        matTooltip="Eltávolítás a projetről!"
+        matTooltipPosition="right"
+      >
+        <mat-icon color="warn">delete_forever</mat-icon>
       </button>
       <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
     </mat-list-item>
   </mat-list>
   <div class="Btn">
-    <button
+    <!-- <button
       class="submitBtn"
       mat-raised-button
       color="primary"
@@ -43,7 +47,7 @@
         ></mat-spinner
       ></span>
       Módosítás
-    </button>
+    </button> -->
     <button style="margin-left: 1em" mat-raised-button mat-dialog-close>
       Mégse
     </button>

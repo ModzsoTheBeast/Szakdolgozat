@@ -5,8 +5,8 @@ import { Observable, Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class DeleteService {
-  deleteProject$: Observable<boolean>;
-  private deleteProjectSubject = new Subject<boolean>();
+  deleteProject$: Observable<number>;
+  private deleteProjectSubject = new Subject<number>();
 
   deleteTaskList$: Observable<number>;
   private deleteTaskListSubject = new Subject<number>();
@@ -14,13 +14,25 @@ export class DeleteService {
   deleteComment$: Observable<number>;
   private deleteCommentSubject = new Subject<number>();
 
+  deleteTask$: Observable<number>;
+  private deleteTaskSubject = new Subject<number>();
+
+  deleteList$: Observable<number>;
+  private deleteListSubject = new Subject<number>();
+
   constructor() {
     this.deleteProject$ = this.deleteProjectSubject.asObservable();
     this.deleteTaskList$ = this.deleteTaskListSubject.asObservable();
     this.deleteComment$ = this.deleteCommentSubject.asObservable();
+    this.deleteTask$ = this.deleteTaskSubject.asObservable();
+    this.deleteList$ = this.deleteListSubject.asObservable();
   }
 
-  deleteProject(data: boolean) {
+  deleteList(data: number) {
+    this.deleteListSubject.next(data);
+  }
+
+  deleteProject(data: number) {
     this.deleteProjectSubject.next(data);
   }
 
@@ -30,5 +42,9 @@ export class DeleteService {
 
   deleteComment(taskCommentId: number) {
     this.deleteCommentSubject.next(taskCommentId);
+  }
+
+  deleteTask(taskId: number) {
+    this.deleteTaskSubject.next(taskId);
   }
 }

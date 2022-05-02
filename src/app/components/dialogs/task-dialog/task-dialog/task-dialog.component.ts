@@ -28,7 +28,7 @@ import {
   updateTaskDTO,
 } from 'src/app/DTOs/TaskDTO';
 import { createTaskListDTO, taskListDTO } from 'src/app/DTOs/TaskListDTO';
-import { UserDTO, UserUpdateDTO } from 'src/app/DTOs/UserDTO';
+import { UserDTO, UserIDDTO, UserUpdateDTO } from 'src/app/DTOs/UserDTO';
 import {
   getCurrentProjectID,
   getCurrentUserID,
@@ -47,6 +47,13 @@ import { UserService } from 'src/app/services/user-service/user.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { priority } from 'src/app/models/enums/priorityEnum';
 import { MoveService } from 'src/app/services/move-service/move.service';
+import { idText } from 'typescript';
+import {
+  colorObj,
+  ColorService,
+} from 'src/app/services/color-service/color.service';
+import { conditionallyCreateMapObjectLiteral } from '@angular/compiler/src/render3/view/util';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-task-dialog',
   templateUrl: './task-dialog.component.html',
@@ -68,7 +75,9 @@ export class TaskDialogComponent implements OnInit {
   deadlineChange: Boolean = false;
   priorityChange: Boolean = false;
   allUsersInProject: contributorsDTO[];
+  allUsers: contributorsDTO[];
   selectedUsers: contributorsDTO[];
+  sULengthnumber: number;
   priority: priority;
   constructor(
     private formBuilder: FormBuilder,
@@ -78,6 +87,7 @@ export class TaskDialogComponent implements OnInit {
     private userService: UserService,
     private dialogRef: MatDialogRef<TaskDialogComponent>,
     private moveService: MoveService,
+    private color: ColorService,
     @Inject(MAT_DIALOG_DATA) public data: { taskID: number }
   ) {
     this.deleteService.deleteTaskList$.subscribe((res) => {
@@ -88,9 +98,7 @@ export class TaskDialogComponent implements OnInit {
     });
 
     this.deleteService.deleteComment$.subscribe((res) => {
-      let index = this.taskData.comments?.findIndex(
-        (x) => x.taskCommentId === res
-      );
+      let index = this.taskData.comments?.findIndex((x) => x.commentId === res);
       if (index != -1) this.taskData.comments?.splice(index as number, 1);
     });
   }
@@ -109,6 +117,8 @@ export class TaskDialogComponent implements OnInit {
       .getAllContributors(getCurrentProjectID())
       .subscribe((res) => {
         this.allUsersInProject = res;
+        this.allUsers = res;
+        console.log(this.allUsers);
       });
     this.taskService.getDetailedTaskDataByTaskID(this.taskid).subscribe(
       (resoult) => {
@@ -136,13 +146,18 @@ export class TaskDialogComponent implements OnInit {
 
   prioritySelected(value: any) {
     let data: setTaskPriorityDTO = {
-      taskid: this.taskid,
+      taskId: this.taskid,
       priority: value.value,
     };
     this.taskService.setTaskPriority(data).subscribe((res) => {
-      this.taskData.priority = res.priority;
+      this.taskData.level = res.priority;
     });
     this.priorityChange = false;
+    let obj: colorObj = {
+      color: value.value,
+      id: this.taskid,
+    };
+    this.color.changeColor(obj);
   }
 
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
@@ -171,8 +186,10 @@ export class TaskDialogComponent implements OnInit {
     };
     this.taskService.updateTask(update).subscribe(
       (res) => {
-        this.taskData.taskName = res.taskName as string;
-        this.taskData.taskDescription = res.taskDescription as string;
+        if (res.taskName != null && res.taskName !== '')
+          this.taskData.taskName = res.taskName as string;
+        if (res.taskDescription != null && res.taskDescription !== '')
+          this.taskData.taskDescription = res.taskDescription as string;
         let data: modifyTaskObj = {
           taskId: this.taskid,
           taskName: res.taskName as string,
@@ -191,7 +208,46 @@ export class TaskDialogComponent implements OnInit {
       userId: id,
       taskId: this.taskid,
     };
-    this.taskService.removeContributorFromTask(data).subscribe((res) => {});
+    this.taskService.removeContributorFromTask(data).subscribe(
+      (res) => {
+        //let pID = getCurrentProjectID();
+        // this.userService.getAllContributors(pID).subscribe((users) => {
+        //   let index = users.findIndex((p) => p.userId == res.userId);
+        //   let newUser: contributorsDTO = users[index];
+        //   this.taskData.contributors.push(newUser);
+        // });
+
+        let index = this.taskData.contributors.findIndex(
+          (x) => x.userId === res.userId
+        );
+        if (index != -1) this.taskData.contributors.splice(index, 1);
+        this.noMoreUser = this.taskData.contributors.length == 0 ? false : true;
+        let index1 = this.allUsers.findIndex((x) => x.userId == id);
+        if (index1 != -1) {
+          let user = this.allUsers[index1];
+          this.allUsersInProject.push(user);
+        }
+      },
+      (error: HttpErrorResponse) => {
+        if (error.status == 200) {
+          let index = this.taskData.contributors.findIndex(
+            (x) => x.userId === id
+          );
+          if (index != -1) this.taskData.contributors.splice(index, 1);
+          this.noMoreUser =
+            this.taskData.contributors.length == 0 ? false : true;
+          this.userService
+            .getAllContributors(getCurrentProjectID())
+            .subscribe((res) => {
+              let index1 = res.findIndex((x) => x.userId == id);
+              if (index1 == -1) {
+                let user = res[index1];
+                this.allUsersInProject.push(user);
+              }
+            });
+        }
+      }
+    );
   }
 
   drop(event: CdkDragDrop<contributorsDTO[]>) {
@@ -216,7 +272,7 @@ export class TaskDialogComponent implements OnInit {
       (resoult) => {
         let username = getCurrentUserName();
         let comment: commentDTO = {
-          taskCommentId: resoult.taskCommentId,
+          commentId: resoult.commentId as number,
           createdOn: resoult.createdOn as Date,
           createdBy: username,
           comment: resoult.comment,
@@ -259,25 +315,54 @@ export class TaskDialogComponent implements OnInit {
       userids.push(element.userId);
     });
     console.log(userids);
-
+    if (userids.length == 0) {
+      return;
+    }
     let users: addNewContrsDTO = {
       taskId: this.taskid,
       userId: userids,
     };
     this.taskService.addContributors(users).subscribe(
-      (addedUser) => {},
-      (error: HttpErrorResponse) => {}
-    );
-  }
-
-  deleteTask() {
-    this.taskService.deleteTask(this.taskid).subscribe(
-      () => {
-        this.dialogRef.close();
-        this.moveService.moveList(true);
+      (addedUser) => {
+        this.userService
+          .getAllContributors(getCurrentProjectID())
+          .subscribe((res) => {
+            addedUser.userId.forEach((element) => {
+              let index = res.findIndex((x) => x.userId == element);
+              if (index != -1) {
+                let user = res[index];
+                this.taskData.contributors.push(user);
+              }
+            });
+          });
       },
       (error: HttpErrorResponse) => {}
     );
+    this.noMoreUser = this.taskData.contributors.length == 0 ? true : false;
+    this.addContributors = !this.addContributors;
+  }
+
+  deleteTask() {
+    Swal.fire({
+      title: 'Bitos vagy benne?',
+      text: 'Nem fogod tudni visszaállítani!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Igen, töröld ki!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire('Törölve!', '', 'success');
+        this.taskService.deleteTask(this.taskid).subscribe(
+          (res) => {},
+          (error: HttpErrorResponse) => {},
+          () => {}
+        );
+        this.deleteService.deleteTask(this.taskid);
+        this.dialogRef.close();
+      }
+    });
   }
 
   createTaskForm() {

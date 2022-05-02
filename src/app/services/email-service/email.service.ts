@@ -10,7 +10,7 @@ export class EmailService {
 
   sendEmail(user: emailDetailsDTO) {
     return this.http.post<emailDetailsDTO>(
-      `${environment.apiUrl}/api/email/send`,
+      `${environment.apiUrl}/api/role/email`,
       user
     );
   }
@@ -18,6 +18,5 @@ export class EmailService {
 
 export interface emailDetailsDTO {
   projectId: number;
-  fromEmail: string;
   toEmail: string;
 }

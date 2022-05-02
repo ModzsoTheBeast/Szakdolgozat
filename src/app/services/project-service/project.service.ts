@@ -1,7 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { CreateProjectDTO, ProjectsObj } from 'src/app/DTOs/ProjectsDTOs';
+import {
+  CreateProjectDTO,
+  ProjectsObj,
+  removeUserFromProjectDTO,
+} from 'src/app/DTOs/ProjectsDTOs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -37,5 +41,13 @@ export class ProjectService {
 
   myMethod(data: string) {
     this.myMethodSubject.next(data);
+  }
+
+  removeUserFromProject(data: removeUserFromProjectDTO) {
+    //backen meg kell csinálni
+    return this.http.post<removeUserFromProjectDTO>(
+      `${environment.apiUrl}/api/project/remove`,
+      data
+    );
   }
 }
