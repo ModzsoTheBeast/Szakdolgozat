@@ -109,6 +109,7 @@ export class HeaderComponent implements OnInit {
               (error: HttpErrorResponse) => {},
               () => {}
             );
+            this.router.navigate(['projects']);
           }
         );
       }

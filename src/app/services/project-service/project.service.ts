@@ -46,7 +46,7 @@ export class ProjectService {
   removeUserFromProject(data: removeUserFromProjectDTO) {
     //backen meg kell csinálni
     return this.http.post<removeUserFromProjectDTO>(
-      `${environment.apiUrl}/api/project/remove`,
+      `${environment.apiUrl}/api/role/delete`,
       data
     );
   }
