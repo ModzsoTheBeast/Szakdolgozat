@@ -109,6 +109,7 @@ export class HeaderComponent implements OnInit {
               (error: HttpErrorResponse) => {},
               () => {}
             );
+            this.onMainPage = false;
             this.router.navigate(['projects']);
           }
         );
@@ -218,6 +219,7 @@ export class HeaderComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire('Törölve!', '', 'success').then(() => {
+          this.onMainPage = false;
           let pID = getCurrentProjectID();
           this.projectService.deleteProject(pID).subscribe(
             (res) => {

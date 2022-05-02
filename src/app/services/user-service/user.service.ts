@@ -92,7 +92,7 @@ export class UserService {
 
   userUpdate(user: UserUpdateDTO) {
     return this.http.post<UserUpdateDTO>(
-      `${environment.apiUrl}/api/user/update`,
+      `${environment.apiUrl}/api/users/update`,
       user
     );
   }

@@ -6,6 +6,7 @@ import {
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ListDTO, MoveDTO } from 'src/app/DTOs/ListDTOs';
 import {
   getCurrentProjectID,
@@ -48,7 +49,8 @@ export class TaskSectionComponent implements OnInit {
     private listService: ListServiceService,
     private snack: snack,
     private moveService: MoveService,
-    private deleteService: DeleteService
+    private deleteService: DeleteService,
+    private snackBar: MatSnackBar
   ) {
     this.createListForm();
   }
@@ -85,7 +87,11 @@ export class TaskSectionComponent implements OnInit {
         Swal.fire('Törölve!', '', 'success');
         this.listService.deleteList(this.listID).subscribe(
           (res) => {},
-          (error: HttpErrorResponse) => {},
+          (error: HttpErrorResponse) => {
+            this.snackBar.open('A lista törlése sikertelen!', '', {
+              duration: 2,
+            });
+          },
           () => {}
         );
         this.deleteService.deleteList(this.listID);
@@ -141,9 +147,16 @@ export class TaskSectionComponent implements OnInit {
       taskName: this.taskNameCtrl?.value.trim(),
       listId: this.listid,
     };
-    this.taskService.createNewTask(task).subscribe((res) => {
-      this.tasks.push(res);
-    });
+    this.taskService.createNewTask(task).subscribe(
+      (res) => {
+        this.tasks.push(res);
+      },
+      (error: HttpErrorResponse) => {
+        this.snackBar.open('Kártya létréhozása sikertelen!', '', {
+          duration: 2,
+        });
+      }
+    );
     this.createTaskBool = false;
     this.createTaskForm.reset();
   }

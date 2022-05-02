@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -42,7 +43,8 @@ export class EditContributorComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private dialogRef: MatDialogRef<EditContributorComponent>,
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    private snackBar: MatSnackBar
   ) {
     this.enumKeys = Object.keys(this.rolesEnum);
     this.enumKeys.splice(0, 6);
@@ -58,7 +60,11 @@ export class EditContributorComponent implements OnInit {
       (resoult: any) => {
         this.contr = resoult;
       },
-      (error: HttpErrorResponse) => {}
+      (error: HttpErrorResponse) => {
+        this.snackBar.open('A tagok betöltése sikertelen!', '', {
+          duration: 2000,
+        });
+      }
     );
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
@@ -83,7 +89,11 @@ export class EditContributorComponent implements OnInit {
     };
     this.userService.saveContributors(userData).subscribe(
       (res: any) => {},
-      (error: HttpErrorResponse) => {}
+      (error: HttpErrorResponse) => {
+        this.snackBar.open('A mentés sikertelen!!', '', {
+          duration: 2000,
+        });
+      }
     );
     if (con.userId == getCurrentUserID()) {
       localStorage.setItem('userRole', event);
@@ -109,7 +119,11 @@ export class EditContributorComponent implements OnInit {
           }
         });
       },
-      (error: HttpErrorResponse) => {}
+      (error: HttpErrorResponse) => {
+        this.snackBar.open('A tagok betöltése sikertelen!', '', {
+          duration: 2000,
+        });
+      }
     );
 
     Swal.fire({
@@ -124,7 +138,14 @@ export class EditContributorComponent implements OnInit {
       if (result.isConfirmed) {
         if (this.contr.length == 1) {
           Swal.fire('Törölve!', '', 'success').then(() => {
-            this.projectService.deleteProject(pID).subscribe((res) => {});
+            this.projectService.deleteProject(pID).subscribe(
+              (res) => {},
+              (error: HttpErrorResponse) => {
+                this.snackBar.open('A projekt törlése sikertelen!', '', {
+                  duration: 2000,
+                });
+              }
+            );
             if (con.userId == getCurrentUserID()) {
               this.dialogRef.close();
               this.router.navigate(['projects']);
@@ -143,7 +164,9 @@ export class EditContributorComponent implements OnInit {
               this.contr = this.contr.splice(index, 1);
             },
             (error: HttpErrorResponse) => {
-              this.isLoading = false;
+              this.snackBar.open('Az eltávolítás sikertelen!', '', {
+                duration: 2000,
+              });
             }
           );
           this.dialogRef.close();

@@ -54,6 +54,7 @@ import {
 } from 'src/app/services/color-service/color.service';
 import { conditionallyCreateMapObjectLiteral } from '@angular/compiler/src/render3/view/util';
 import Swal from 'sweetalert2';
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-task-dialog',
   templateUrl: './task-dialog.component.html',
@@ -88,6 +89,7 @@ export class TaskDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<TaskDialogComponent>,
     private moveService: MoveService,
     private color: ColorService,
+    private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: { taskID: number }
   ) {
     this.deleteService.deleteTaskList$.subscribe((res) => {
@@ -113,13 +115,18 @@ export class TaskDialogComponent implements OnInit {
       comments: [],
     };
     this.taskid = this.data.taskID;
-    this.userService
-      .getAllContributors(getCurrentProjectID())
-      .subscribe((res) => {
+    this.userService.getAllContributors(getCurrentProjectID()).subscribe(
+      (res) => {
         this.allUsersInProject = res;
         this.allUsers = res;
         console.log(this.allUsers);
-      });
+      },
+      (error: HttpErrorResponse) => {
+        this.snackBar.open('A tagok betöltése sikertelen!', '', {
+          duration: 2000,
+        });
+      }
+    );
     this.taskService.getDetailedTaskDataByTaskID(this.taskid).subscribe(
       (resoult) => {
         this.taskData = resoult;
@@ -149,9 +156,16 @@ export class TaskDialogComponent implements OnInit {
       taskId: this.taskid,
       priority: value.value,
     };
-    this.taskService.setTaskPriority(data).subscribe((res) => {
-      this.taskData.level = res.priority;
-    });
+    this.taskService.setTaskPriority(data).subscribe(
+      (res) => {
+        this.taskData.level = res.priority;
+      },
+      (error: HttpErrorResponse) => {
+        this.snackBar.open('A prioritás mentése sikertelen!', '', {
+          duration: 2000,
+        });
+      }
+    );
     this.priorityChange = false;
     let obj: colorObj = {
       color: value.value,
@@ -173,7 +187,11 @@ export class TaskDialogComponent implements OnInit {
       (res) => {
         this.taskData.deadline = res.deadline;
       },
-      (error: HttpErrorResponse) => {}
+      (error: HttpErrorResponse) => {
+        this.snackBar.open('Határidő hozzáadása sikertelen!', '', {
+          duration: 2000,
+        });
+      }
     );
     this.deadlineChange = false;
   }
@@ -197,7 +215,11 @@ export class TaskDialogComponent implements OnInit {
         };
         this.taskService.modifyTask(data);
       },
-      (error: HttpErrorResponse) => {}
+      (error: HttpErrorResponse) => {
+        this.snackBar.open('A task frissítése sikertelen!', '', {
+          duration: 2000,
+        });
+      }
     );
     this.editingTask = false;
     this.taskForm.reset();
@@ -236,15 +258,20 @@ export class TaskDialogComponent implements OnInit {
           if (index != -1) this.taskData.contributors.splice(index, 1);
           this.noMoreUser =
             this.taskData.contributors.length == 0 ? false : true;
-          this.userService
-            .getAllContributors(getCurrentProjectID())
-            .subscribe((res) => {
+          this.userService.getAllContributors(getCurrentProjectID()).subscribe(
+            (res) => {
               let index1 = res.findIndex((x) => x.userId == id);
               if (index1 == -1) {
                 let user = res[index1];
                 this.allUsersInProject.push(user);
               }
-            });
+            },
+            (error: HttpErrorResponse) => {
+              this.snackBar.open('A tagok betöltése sikertelen!', '', {
+                duration: 2000,
+              });
+            }
+          );
         }
       }
     );
@@ -324,9 +351,8 @@ export class TaskDialogComponent implements OnInit {
     };
     this.taskService.addContributors(users).subscribe(
       (addedUser) => {
-        this.userService
-          .getAllContributors(getCurrentProjectID())
-          .subscribe((res) => {
+        this.userService.getAllContributors(getCurrentProjectID()).subscribe(
+          (res) => {
             addedUser.userId.forEach((element) => {
               let index = res.findIndex((x) => x.userId == element);
               if (index != -1) {
@@ -334,9 +360,19 @@ export class TaskDialogComponent implements OnInit {
                 this.taskData.contributors.push(user);
               }
             });
-          });
+          },
+          (error: HttpErrorResponse) => {
+            this.snackBar.open('Tagok betöltése sikertelen!', '', {
+              duration: 2000,
+            });
+          }
+        );
       },
-      (error: HttpErrorResponse) => {}
+      (error: HttpErrorResponse) => {
+        this.snackBar.open('Tag hozzáadása sikertelen!', '', {
+          duration: 2000,
+        });
+      }
     );
     this.noMoreUser = this.taskData.contributors.length == 0 ? true : false;
     this.addContributors = !this.addContributors;
@@ -356,7 +392,11 @@ export class TaskDialogComponent implements OnInit {
         Swal.fire('Törölve!', '', 'success');
         this.taskService.deleteTask(this.taskid).subscribe(
           (res) => {},
-          (error: HttpErrorResponse) => {},
+          (error: HttpErrorResponse) => {
+            this.snackBar.open('Kártya törlése sikertelen!', '', {
+              duration: 2000,
+            });
+          },
           () => {}
         );
         this.deleteService.deleteTask(this.taskid);
